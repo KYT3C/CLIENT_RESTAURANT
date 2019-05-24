@@ -1,5 +1,7 @@
 package com.example.client_restaurant;
 
+import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -35,6 +37,7 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
+     @SuppressLint("StaticFieldLeak")
      class LoginAsyncTask extends AsyncTask<String, Void, String>{
 
         Socket sk;
@@ -59,7 +62,7 @@ public class LoginActivity extends AppCompatActivity {
             String publicKey;
 
             try {
-                String ip = "192.168.1.200";
+                String ip = "192.168.12.200";
                 sk = new Socket(ip, 20002);
                 System.out.println("Establecida la conexión con " + ip);
                 dis = new DataInputStream(sk.getInputStream());
@@ -78,7 +81,8 @@ public class LoginActivity extends AppCompatActivity {
 
                     System.out.println("Login correcto");
 
-                    //Pasa de Activity.
+                    Intent intent = new Intent(LoginActivity.this,HomePageActivity.class);
+                    startActivity(intent);
                 }
                 else {
 
