@@ -5,21 +5,27 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
 
-public class MainActivity extends AppCompatActivity {
+public class LoginActivity extends AppCompatActivity {
+
+    EditText editTextDni, editTextAccesKey;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_login);
 
-        Button buttonLogin = findViewById(R.id.button);
+        Button buttonLogin = findViewById(R.id.buttonLogin);
+
+        editTextDni = findViewById(R.id.editTextDni);
+        editTextAccesKey = findViewById(R.id.editTextAccesKey);
 
         buttonLogin.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -29,12 +35,13 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    static class LoginAsyncTask extends AsyncTask<String, Void, String>{
+     class LoginAsyncTask extends AsyncTask<String, Void, String>{
 
         Socket sk;
 
         DataInputStream dis;
         DataOutputStream dos;
+
 
         @Override
         protected void onPreExecute() {
@@ -49,16 +56,21 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected String doInBackground(String... strings) {
 
+            String publicKey;
+
             try {
-                String ip = "192.168.12.200";
+                String ip = "192.168.1.200";
                 sk = new Socket(ip, 20002);
                 System.out.println("Establecida la conexión con " + ip);
                 dis = new DataInputStream(sk.getInputStream());
                 dos = new DataOutputStream(sk.getOutputStream());
 
-                //Aquí en el cliente de android serían getText de los EditText y se enviarán cifrados.
-                dos.writeUTF("45992171G");
-                dos.writeUTF("GonzaloPass");
+                //Falta un método que cifre los datos.
+
+                //publicKey = dis.readUTF();
+
+                dos.writeUTF(editTextDni.getText().toString());
+                dos.writeUTF(editTextAccesKey.getText().toString());
 
                 boolean validatedLogin = dis.readBoolean();
 
@@ -77,6 +89,11 @@ public class MainActivity extends AppCompatActivity {
             } catch (IOException ex) {
                 ex.printStackTrace();
             }
+
+            return null;
+        }
+
+        private String encodeAccesKey( String accesKey){
 
             return null;
         }
