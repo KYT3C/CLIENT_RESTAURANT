@@ -18,7 +18,8 @@ import java.net.Socket;
 
 public class LoginActivity extends AppCompatActivity {
 
-    EditText editTextDni, editTextAccesKey;
+    //Edit Text del "Usuario" y la "Contraseña".
+    private EditText editTextDni, editTextAccesKey;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,11 +27,14 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+        //Button para hacer Login.
         Button buttonLogin = findViewById(R.id.buttonLogin);
 
+        //Edit Text del "Usuario" y la "Contraseña".
         editTextDni = findViewById(R.id.editTextDni);
         editTextAccesKey = findViewById(R.id.editTextAccesKey);
 
+        //Cuando se hace click en el button se crea la conexión.
         buttonLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -74,43 +78,23 @@ public class LoginActivity extends AppCompatActivity {
 
                 //publicKey = dis.readUTF();
 
-                    dos.writeUTF(editTextDni.getText().toString());
-                    dos.writeUTF(editTextAccesKey.getText().toString());
+                dos.writeUTF(editTextDni.getText().toString());
+                dos.writeUTF(editTextAccesKey.getText().toString());
 
-                boolean validatedLogin = dis.readBoolean();
+                int validatedLogin = dis.readInt();
 
-                if(validatedLogin) {
+                if(validatedLogin == 1) {
 
                     Intent intent = new Intent(LoginActivity.this,HomePageActivity.class);
                     startActivity(intent);
                 }
-                else {
+                if (validatedLogin == 2){
 
-                    runOnUiThread(new Runnable() {
+                    showUsernameOrPasswordError();
+                }
+                if (validatedLogin == 3){
 
-                        @Override
-                        public void run() {
-                            try {
-                                AlertDialog.Builder builder1 = new AlertDialog.Builder(LoginActivity.this);
-                                builder1.setMessage("You have entered an invalid username or password"); // Para no dar más información de la necesaria.
-                                builder1.setCancelable(true);
-
-                                builder1.setPositiveButton(
-                                        "Ok",
-                                        new DialogInterface.OnClickListener() {
-                                            public void onClick(DialogInterface dialog, int id) {
-                                                dialog.cancel();
-                                            }
-                                        });
-
-                                AlertDialog alert11 = builder1.create();
-                                alert11.show();
-
-                            }catch(Exception e){
-                                e.printStackTrace();
-                            }
-                        }
-                    });
+                    showEmptyFieldsError();
                 }
 
             } catch (IOException ex) {
@@ -124,5 +108,55 @@ public class LoginActivity extends AppCompatActivity {
 
             return null;
         }
+
+        private void showUsernameOrPasswordError(){
+
+            runOnUiThread(new Runnable() {
+
+                @Override
+                public void run() {
+
+                    AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(LoginActivity.this);
+                    alertDialogBuilder.setMessage("You have entered an invalid username or password"); // Para no dar más información de la necesaria.
+                    alertDialogBuilder.setCancelable(true);
+
+                    alertDialogBuilder.setPositiveButton(
+                            "Ok",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                    dialog.cancel();
+                                }
+                            });
+
+                    AlertDialog alertDialog = alertDialogBuilder.create();
+                    alertDialog.show();
+                }
+            });
+        }
+
+         private void showEmptyFieldsError(){
+
+             runOnUiThread(new Runnable() {
+
+                 @Override
+                 public void run() {
+
+                     AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(LoginActivity.this);
+                     alertDialogBuilder.setMessage("There can not be empty fields");
+                     alertDialogBuilder.setCancelable(true);
+
+                     alertDialogBuilder.setPositiveButton(
+                             "Ok",
+                             new DialogInterface.OnClickListener() {
+                                 public void onClick(DialogInterface dialog, int id) {
+                                     dialog.cancel();
+                                 }
+                             });
+
+                     AlertDialog alertDialog = alertDialogBuilder.create();
+                     alertDialog.show();
+                 }
+             });
+         }
     }
 }
