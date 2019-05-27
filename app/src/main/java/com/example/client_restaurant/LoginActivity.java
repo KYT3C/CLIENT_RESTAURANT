@@ -1,8 +1,10 @@
 package com.example.client_restaurant;
 
 import android.annotation.SuppressLint;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -72,22 +74,43 @@ public class LoginActivity extends AppCompatActivity {
 
                 //publicKey = dis.readUTF();
 
-                dos.writeUTF(editTextDni.getText().toString());
-                dos.writeUTF(editTextAccesKey.getText().toString());
+                    dos.writeUTF(editTextDni.getText().toString());
+                    dos.writeUTF(editTextAccesKey.getText().toString());
 
                 boolean validatedLogin = dis.readBoolean();
 
                 if(validatedLogin) {
-
-                    System.out.println("Login correcto");
 
                     Intent intent = new Intent(LoginActivity.this,HomePageActivity.class);
                     startActivity(intent);
                 }
                 else {
 
-                    System.out.println("Login fallido");
-                    //Se queda en la Activity y muestra un mensaje de Error.
+                    runOnUiThread(new Runnable() {
+
+                        @Override
+                        public void run() {
+                            try {
+                                AlertDialog.Builder builder1 = new AlertDialog.Builder(LoginActivity.this);
+                                builder1.setMessage("You have entered an invalid username or password"); // Para no dar más información de la necesaria.
+                                builder1.setCancelable(true);
+
+                                builder1.setPositiveButton(
+                                        "Ok",
+                                        new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog, int id) {
+                                                dialog.cancel();
+                                            }
+                                        });
+
+                                AlertDialog alert11 = builder1.create();
+                                alert11.show();
+
+                            }catch(Exception e){
+                                e.printStackTrace();
+                            }
+                        }
+                    });
                 }
 
             } catch (IOException ex) {
