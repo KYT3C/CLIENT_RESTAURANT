@@ -1,7 +1,7 @@
 package com.example.client_restaurant;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
+
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -11,23 +11,18 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 
-import java.io.File;
 import java.io.ObjectInputStream;
-import java.net.UnknownHostException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.security.PublicKey;
-import java.io.FileInputStream;
+
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
-import java.security.spec.KeySpec;
-import java.security.KeyFactory;
-import java.security.spec.X509EncodedKeySpec;
+
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
@@ -88,7 +83,7 @@ public class LoginActivity extends AppCompatActivity {
         protected String doInBackground(String... strings) {
 
             try {
-                String ip = "192.168.137.1";
+                String ip = "192.168.12.200";
                 sk = new Socket(ip, 20002);
                 System.out.println("Establecida la conexión con " + ip);
                 dis = new DataInputStream(sk.getInputStream());
@@ -184,6 +179,7 @@ public class LoginActivity extends AppCompatActivity {
                 byte[] encriptado = rsa.doFinal(message.getBytes());
                 dos.writeInt(encriptado.length);
                 dos.write(encriptado);
+
             } catch (NoSuchAlgorithmException e) {
                 e.printStackTrace();
             } catch (NoSuchPaddingException e) {
