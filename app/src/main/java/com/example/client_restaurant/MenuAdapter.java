@@ -2,6 +2,8 @@ package com.example.client_restaurant;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -36,6 +38,7 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.MenuViewHolder
 
         menuViewHolder.imgIcon.setImageResource(mData.get(i).getIcon());
 
+
     }
 
     @Override
@@ -47,7 +50,7 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.MenuViewHolder
 
         ImageView imgIcon;
 
-        public  MenuViewHolder(@NonNull View itemView){
+        public  MenuViewHolder(@NonNull final View itemView){
             super(itemView);
             imgIcon = itemView.findViewById(R.id.img_icon);
             itemView.setOnClickListener(new View.OnClickListener() {
@@ -58,6 +61,23 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.MenuViewHolder
                     notifyItemChanged(selected_position);
                 }
             });
+           itemView.setOnClickListener(new View.OnClickListener() {
+               @Override
+               public void onClick(View v) {
+
+                   if (getAdapterPosition() == 1) {
+                       AppCompatActivity activity = (AppCompatActivity) itemView.getContext();
+                       Fragment myFragment = new HomePageFragment();
+                       activity.getSupportFragmentManager().beginTransaction().replace(R.id.container, myFragment).addToBackStack(null).commit();
+                   }
+                   if (getAdapterPosition() == 5) {
+                       AppCompatActivity activity = (AppCompatActivity) itemView.getContext();
+                       Fragment myFragment = new SettingsFragment();
+                       activity.getSupportFragmentManager().beginTransaction().replace(R.id.container, myFragment).addToBackStack(null).commit();
+                   }
+
+               }
+           });
         }
     }
 }

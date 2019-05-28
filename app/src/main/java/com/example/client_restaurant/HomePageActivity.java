@@ -1,7 +1,5 @@
 package com.example.client_restaurant;
 
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -12,8 +10,6 @@ import java.util.List;
 
 public class HomePageActivity extends AppCompatActivity {
 
-    FragmentManager fragmentManager;
-    FragmentTransaction fragmentTransaction;
     RecyclerView recyclerView;
 
     List<Item> mData;
@@ -32,9 +28,6 @@ public class HomePageActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home_page);
 
-        fragmentManager = getSupportFragmentManager();
-        fragmentTransaction = fragmentManager.beginTransaction();
-
         mData = new ArrayList<>();
 
         recyclerView = findViewById(R.id.recyclerView);
@@ -50,15 +43,5 @@ public class HomePageActivity extends AppCompatActivity {
 
         menuAdapter = new MenuAdapter(HomePageActivity.this,mData);
         recyclerView.setAdapter(menuAdapter);
-
-        HomePageFragment homePageFragment = new HomePageFragment();
-
-        int position = menuAdapter.selected_position;
-        System.out.println("POSICION ACTUAL" + position);
-
-        if (position == 0){
-        fragmentTransaction.replace(R.id.container,homePageFragment);
-        fragmentTransaction.commit();
-        }
     }
 }
