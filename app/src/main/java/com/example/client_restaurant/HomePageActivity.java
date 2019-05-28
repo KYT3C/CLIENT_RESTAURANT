@@ -23,9 +23,9 @@ public class HomePageActivity extends AppCompatActivity {
     public static final int MENU_CODE = 1;
     public static final int TICKET_CODE = 2;
     public static final int TABLES_CODE = 3;
+    public static final int STOPWATCH_CODE = 4;
+    public static final int SETTINGS_CODE = 5;
     public static final int STOCK_CODE = 0;
-    public static final int ALCOHOLICDRINKS_CODE = 0;
-    public static final int SETTINGS_CODE = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +44,8 @@ public class HomePageActivity extends AppCompatActivity {
         mData.add(new Item(R.drawable.ic_menu,MENU_CODE,"Menu Fragemnt"));
         mData.add(new Item(R.drawable.ic_bill,TICKET_CODE,"Ticket Fragment"));
         mData.add(new Item(R.drawable.ic_tables,TABLES_CODE,"Tables Fragment"));
+        mData.add(new Item(R.drawable.ic_stopwatch,STOPWATCH_CODE,"Stopwatch Fragment"));
+        mData.add(new Item(R.drawable.ic_settings,SETTINGS_CODE,"Settings Fragment"));
 
 
         menuAdapter = new MenuAdapter(HomePageActivity.this,mData);
@@ -51,7 +53,12 @@ public class HomePageActivity extends AppCompatActivity {
 
         HomePageFragment homePageFragment = new HomePageFragment();
 
+        int position = menuAdapter.selected_position;
+        System.out.println("POSICION ACTUAL" + position);
+
+        if (position == 0){
         fragmentTransaction.replace(R.id.container,homePageFragment);
         fragmentTransaction.commit();
+        }
     }
 }

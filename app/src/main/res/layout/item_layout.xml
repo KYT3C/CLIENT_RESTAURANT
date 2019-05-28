@@ -6,7 +6,8 @@
     android:orientation="vertical"
     android:paddingBottom="1dp"
     android:clickable="true"
-    android:foreground="?attr/selectableItemBackgroundBorderless">
+    android:foreground="?attr/selectableItemBackgroundBorderless"
+    android:background="@color/cardview_light_background">
 
     <ImageView
         android:layout_width="match_parent"
