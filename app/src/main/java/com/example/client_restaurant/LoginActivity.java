@@ -16,6 +16,7 @@ import android.widget.Toast;
 import java.io.File;
 import java.io.ObjectInputStream;
 import java.net.UnknownHostException;
+import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.security.PublicKey;
 import java.io.FileInputStream;
@@ -28,7 +29,9 @@ import java.security.spec.KeySpec;
 import java.security.KeyFactory;
 import java.security.spec.X509EncodedKeySpec;
 
+import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
+import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 
 public class LoginActivity extends AppCompatActivity {
@@ -68,6 +71,7 @@ public class LoginActivity extends AppCompatActivity {
         DataInputStream dis;
         DataOutputStream dos;
         ObjectInputStream ois;
+        Cipher rsa = null;
 
 
         @Override
@@ -89,26 +93,16 @@ public class LoginActivity extends AppCompatActivity {
                 dis = new DataInputStream(sk.getInputStream());
                 dos = new DataOutputStream(sk.getOutputStream());
                 ois = new ObjectInputStream(sk.getInputStream());
+
                 try {
-                    Cipher rsa = null;
-                    rsa = Cipher.getInstance("RSA/ECB/PKCS1Padding");
-                    //Recibo la clave publica del servidor
                     publicKey = (PublicKey) ois.readObject();
-                    System.out.println(publicKey.toString());
-                    //Creo un mensaje para enviar
                     String message = "pero weno willy como tu por aqui compañero";
-                    //Encripto el mensaje con la clave publica mediante RSA
-                    rsa.init(Cipher.ENCRYPT_MODE, publicKey);
-                    byte[] encriptado = rsa.doFinal(message.getBytes());
-                    dos.writeInt(encriptado.length);
-                    dos.write(encriptado);
+                    sendEncrypted(message);
+                    decryptMessage();
+
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-
-                //Falta un método que cifre los datos.
-
-                //publicKey = dis.readUTF();
 
                 dos.writeUTF(editTextDni.getText().toString());
                 dos.writeUTF(editTextAccesKey.getText().toString());
@@ -197,20 +191,51 @@ public class LoginActivity extends AppCompatActivity {
             });
         }
 
-        private PublicKey loadPublicKey(String fileName) throws Exception {
-            FileInputStream fis = new FileInputStream(fileName);
-            int numBtyes = fis.available();
-            byte[] bytes = new byte[numBtyes];
-            fis.read(bytes);
-            fis.close();
+        private void sendEncrypted(String message) {
 
-            KeyFactory keyFactory = KeyFactory.getInstance("RSA");
-            KeySpec keySpec = new X509EncodedKeySpec(bytes);
-            PublicKey keyFromBytes = keyFactory.generatePublic(keySpec);
-            return keyFromBytes;
+            try {
+                rsa = Cipher.getInstance("RSA/ECB/PKCS1Padding");
+                rsa.init(Cipher.ENCRYPT_MODE, publicKey);
+                byte[] encriptado = rsa.doFinal(message.getBytes());
+                dos.writeInt(encriptado.length);
+                dos.write(encriptado);
+            } catch (NoSuchAlgorithmException e) {
+                e.printStackTrace();
+            } catch (NoSuchPaddingException e) {
+                e.printStackTrace();
+            } catch (BadPaddingException e) {
+                e.printStackTrace();
+            } catch (IllegalBlockSizeException e) {
+                e.printStackTrace();
+            } catch (InvalidKeyException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
 
-        private void sendEncrypted() {
+        private String decryptMessage(){
+            try {
+                rsa.init(Cipher.DECRYPT_MODE, publicKey);
+                byte[]message = null;
+                int length = dis.readInt();
+                if (length > 0){
+                    message = new byte[length];
+                    dis.readFully(message, 0, message.length);
+                }
+                byte[] bytesDesencriptados = rsa.doFinal(message);
+                String textoDesencripado = new String(bytesDesencriptados);
+                System.out.println(textoDesencripado);
+                return textoDesencripado;
+            } catch (InvalidKeyException e) {
+                e.printStackTrace();
+            } catch (BadPaddingException e) {
+                e.printStackTrace();
+            } catch (IllegalBlockSizeException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
 
         }
     }
