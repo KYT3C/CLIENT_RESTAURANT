@@ -83,7 +83,7 @@ public class LoginActivity extends AppCompatActivity {
         protected String doInBackground(String... strings) {
 
             try {
-                String ip = "192.168.12.200";
+                String ip = "192.168.1.234";
                 sk = new Socket(ip, 20002);
                 System.out.println("Establecida la conexión con " + ip);
                 dis = new DataInputStream(sk.getInputStream());

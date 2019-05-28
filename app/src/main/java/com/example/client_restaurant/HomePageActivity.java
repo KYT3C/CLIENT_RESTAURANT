@@ -19,9 +19,10 @@ public class HomePageActivity extends AppCompatActivity {
     List<Item> mData;
     MenuAdapter menuAdapter;
 
-    public static final int MENU_CODE = 0;
-    public static final int TICKET_CODE = 0;
-    public static final int TABLE_CODE = 0;
+    public static final int USER_CODE = 0;
+    public static final int MENU_CODE = 1;
+    public static final int TICKET_CODE = 2;
+    public static final int TABLES_CODE = 3;
     public static final int STOCK_CODE = 0;
     public static final int ALCOHOLICDRINKS_CODE = 0;
     public static final int SETTINGS_CODE = 0;
@@ -39,7 +40,11 @@ public class HomePageActivity extends AppCompatActivity {
         recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
+        mData.add(new Item(R.drawable.ic_user,USER_CODE,"User Fragment"));
         mData.add(new Item(R.drawable.ic_menu,MENU_CODE,"Menu Fragemnt"));
+        mData.add(new Item(R.drawable.ic_bill,TICKET_CODE,"Ticket Fragment"));
+        mData.add(new Item(R.drawable.ic_tables,TABLES_CODE,"Tables Fragment"));
+
 
         menuAdapter = new MenuAdapter(HomePageActivity.this,mData);
         recyclerView.setAdapter(menuAdapter);
