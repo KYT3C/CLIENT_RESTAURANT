@@ -86,6 +86,7 @@ public class LoginActivity extends AppCompatActivity {
 
         @Override
         protected String doInBackground(String... strings) {
+
             try {
                 String ip = "192.168.137.1";
                 sk = new Socket(ip, 20002);
@@ -94,18 +95,10 @@ public class LoginActivity extends AppCompatActivity {
                 dos = new DataOutputStream(sk.getOutputStream());
                 ois = new ObjectInputStream(sk.getInputStream());
 
-                try {
-                    publicKey = (PublicKey) ois.readObject();
-                    String message = "pero weno willy como tu por aqui compañero";
-                    sendEncrypted(message);
-                    decryptMessage();
+                publicKey = (PublicKey) ois.readObject();
 
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-
-                dos.writeUTF(editTextDni.getText().toString());
-                dos.writeUTF(editTextAccesKey.getText().toString());
+                sendEncrypted(editTextDni.getText().toString());
+                sendEncrypted(editTextAccesKey.getText().toString());
 
                 int validatedLogin = dis.readInt();
 
@@ -124,21 +117,13 @@ public class LoginActivity extends AppCompatActivity {
                 }
 
 
-            } catch (IOException ex) {
+            } catch (IOException | ClassNotFoundException ex) {
                 ex.printStackTrace();
             }
 
             return null;
 
 
-        }
-
-        private String publicKey(DataInputStream dis) {
-            try {
-                return dis.readUTF();
-            } catch (Exception e) {
-                return null;
-            }
         }
 
         private void showUsernameOrPasswordError() {
@@ -214,12 +199,12 @@ public class LoginActivity extends AppCompatActivity {
             }
         }
 
-        private String decryptMessage(){
+        private String decryptMessage() {
             try {
                 rsa.init(Cipher.DECRYPT_MODE, publicKey);
-                byte[]message = null;
+                byte[] message = null;
                 int length = dis.readInt();
-                if (length > 0){
+                if (length > 0) {
                     message = new byte[length];
                     dis.readFully(message, 0, message.length);
                 }
