@@ -10,9 +10,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
-
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 
 /**
@@ -66,6 +66,8 @@ public class TimerFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
@@ -81,6 +83,10 @@ public class TimerFragment extends Fragment {
 
         View v = inflater.inflate(R.layout.fragment_timer, container, false);
 
+
+        tiempo = v.findViewById(R.id.txtViewCont);
+        lock = new ReentrantLock();
+        condition = lock.newCondition();
         empieza = v.findViewById(R.id.btnIniciar);
         pausa = v.findViewById(R.id.btnPausar);
         stop = v.findViewById(R.id.btnReiniciar);
@@ -107,6 +113,37 @@ public class TimerFragment extends Fragment {
             }
         });
 
+        pausa.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                wait = true;
+                empieza.setEnabled(true);
+                pausa.setEnabled(false);
+                stop.setEnabled(false);
+                empieza.setText("Reanudar");
+            }
+        });
+
+        stop.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                empieza.setText("start");
+                empieza.setEnabled(true);
+                pausa.setEnabled(false);
+                stop.setEnabled(false);
+                siguiente = false;
+                wait = false;
+                para = true;
+                lock.lock();
+                condition.signalAll();
+                lock.unlock();
+                tiempo.setText(0+"");
+                tiempo.setVisibility(View.VISIBLE);
+
+            }
+        });
+
+
         return v;
 
     }
@@ -129,49 +166,6 @@ public class TimerFragment extends Fragment {
         super.onDetach();
         mListener = null;
     }
-
-        public void onClickStart(){
-
-            empieza.setEnabled(false);
-            pausa.setEnabled(true);
-            stop.setEnabled(true);
-            if(!siguiente){
-                siguiente = true;
-                wait = false;
-                para = false;
-                tick = new Tick();
-                tick.execute();
-            }else if(wait){
-                wait = false;
-                lock.lock();
-                condition.signalAll();
-                lock.unlock();
-            }
-        }
-        public void onClickPausa(View v){
-            wait = true;
-            empieza.setEnabled(true);
-            pausa.setEnabled(false);
-            stop.setEnabled(false);
-            empieza.setText("Reanudar");
-        }
-
-        public void onClickStop(View view){
-            empieza.setText("start");
-            empieza.setEnabled(true);
-            pausa.setEnabled(false);
-            stop.setEnabled(false);
-            siguiente = false;
-            wait = false;
-            para = true;
-            lock.lock();
-            condition.signalAll();
-            lock.unlock();
-            tiempo.setText(0+"");
-            tiempo.setVisibility(View.VISIBLE);
-        }
-
-
 
     public class Tick extends AsyncTask<Void,Integer,Void> {
 
@@ -204,6 +198,7 @@ public class TimerFragment extends Fragment {
         protected void onProgressUpdate(Integer... values){
             super.onProgressUpdate(values);
             if(para&&!wait&&!siguiente){}else{
+
                 tiempo.setText((values[0])+"");
                 tiempo.setVisibility(View.VISIBLE);}
         }
