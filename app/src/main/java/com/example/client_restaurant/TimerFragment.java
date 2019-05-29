@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.Locale;
@@ -34,7 +35,7 @@ public class TimerFragment extends Fragment {
     TextView tiempo;
     Lock lock;
     Condition condition;
-    Button empieza, pausa, stop;
+    ImageView empieza, pausa, stop;
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
@@ -126,14 +127,12 @@ public class TimerFragment extends Fragment {
                 empieza.setEnabled(true);
                 pausa.setEnabled(false);
                 stop.setEnabled(false);
-                empieza.setText("Reanudar");
             }
         });
 
         stop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                empieza.setText("start");
                 empieza.setEnabled(true);
                 pausa.setEnabled(false);
                 stop.setEnabled(false);
