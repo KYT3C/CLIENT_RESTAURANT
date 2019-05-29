@@ -10,6 +10,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+
+import java.util.Locale;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -31,7 +33,7 @@ public class TimerFragment extends Fragment {
     TextView tiempo;
     Lock lock;
     Condition condition;
-    Button empieza,pausa,stop;
+    Button empieza, pausa, stop;
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
@@ -98,13 +100,13 @@ public class TimerFragment extends Fragment {
                 empieza.setEnabled(false);
                 pausa.setEnabled(true);
                 stop.setEnabled(true);
-                if(!siguiente){
+                if (!siguiente) {
                     siguiente = true;
                     wait = false;
                     para = false;
                     tick = new Tick();
                     tick.execute();
-                }else if(wait){
+                } else if (wait) {
                     wait = false;
                     lock.lock();
                     condition.signalAll();
@@ -137,7 +139,7 @@ public class TimerFragment extends Fragment {
                 lock.lock();
                 condition.signalAll();
                 lock.unlock();
-                tiempo.setText(0+"");
+                tiempo.setText(0 + "");
                 tiempo.setVisibility(View.VISIBLE);
 
             }
@@ -167,25 +169,25 @@ public class TimerFragment extends Fragment {
         mListener = null;
     }
 
-    public class Tick extends AsyncTask<Void,Integer,Void> {
+    public class Tick extends AsyncTask<Void, Integer, Void> {
 
         @Override
-        protected Void doInBackground(Void... voids){
-            int cont =0;
+        protected Void doInBackground(Void... voids) {
+            int cont = 0;
             lock.lock();
-            while(!para){
-                if(wait){
-                    try{
+            while (!para) {
+                if (wait) {
+                    try {
                         condition.await();
-                    }catch(InterruptedException e){
+                    } catch (InterruptedException e) {
 
                     }
-                } else{
-                    try{
+                } else {
+                    try {
                         Thread.sleep(1000);
                         cont++;
                         publishProgress(cont);
-                    }catch (InterruptedException e){
+                    } catch (InterruptedException e) {
 
                     }
                 }
@@ -195,15 +197,17 @@ public class TimerFragment extends Fragment {
         }
 
         @Override
-        protected void onProgressUpdate(Integer... values){
+        protected void onProgressUpdate(Integer... values) {
             super.onProgressUpdate(values);
-            if(para&&!wait&&!siguiente){}else{
-
-                tiempo.setText((values[0])+"");
-                tiempo.setVisibility(View.VISIBLE);}
+            if (para && !wait && !siguiente) {
+            } else {
+                int minutes = (int) (values[0] / 60);
+                int seconds = (int) (values[0]) % 60;
+                tiempo.setText(String.format(Locale.getDefault(), "%02d:%02d", minutes, seconds));
+                tiempo.setVisibility(View.VISIBLE);
+            }
         }
     }
-
 
 
     /**
