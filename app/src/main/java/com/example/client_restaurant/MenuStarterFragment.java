@@ -73,7 +73,7 @@ public class MenuStarterFragment extends Fragment {
 
         View v = inflater.inflate(R.layout.fragment_menu_starter, container, false);
 
-        //Aquí debería pasarle 
+        //Aquí debería pasarle
         List<Dish> dishList = new ArrayList<>();
 
         dishList.add(new Dish("Macarrones","Macarroneeee",R.drawable.ic_bill));

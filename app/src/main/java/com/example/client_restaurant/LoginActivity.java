@@ -92,6 +92,8 @@ public class LoginActivity extends AppCompatActivity {
 
                 publicKey = (PublicKey) ois.readObject();
 
+                dos.writeInt(1);
+
                 sendEncrypted(editTextDni.getText().toString());
                 sendEncrypted(editTextAccesKey.getText().toString());
 
