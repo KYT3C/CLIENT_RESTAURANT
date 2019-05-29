@@ -70,13 +70,45 @@ public class TimerFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+
+
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_timer, container, false);
+
+        View v = inflater.inflate(R.layout.fragment_timer, container, false);
+
+        empieza = v.findViewById(R.id.btnIniciar);
+        pausa = v.findViewById(R.id.btnPausar);
+        stop = v.findViewById(R.id.btnReiniciar);
+
+        empieza.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                empieza.setEnabled(false);
+                pausa.setEnabled(true);
+                stop.setEnabled(true);
+                if(!siguiente){
+                    siguiente = true;
+                    wait = false;
+                    para = false;
+                    tick = new Tick();
+                    tick.execute();
+                }else if(wait){
+                    wait = false;
+                    lock.lock();
+                    condition.signalAll();
+                    lock.unlock();
+                }
+            }
+        });
+
+        return v;
+
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -97,46 +129,49 @@ public class TimerFragment extends Fragment {
         super.onDetach();
         mListener = null;
     }
-    public void onClickStart(View view){
 
-        empieza.setEnabled(false);
-        pausa.setEnabled(true);
-        stop.setEnabled(true);
-        if(!siguiente){
-            siguiente = true;
+        public void onClickStart(){
+
+            empieza.setEnabled(false);
+            pausa.setEnabled(true);
+            stop.setEnabled(true);
+            if(!siguiente){
+                siguiente = true;
+                wait = false;
+                para = false;
+                tick = new Tick();
+                tick.execute();
+            }else if(wait){
+                wait = false;
+                lock.lock();
+                condition.signalAll();
+                lock.unlock();
+            }
+        }
+        public void onClickPausa(View v){
+            wait = true;
+            empieza.setEnabled(true);
+            pausa.setEnabled(false);
+            stop.setEnabled(false);
+            empieza.setText("Reanudar");
+        }
+
+        public void onClickStop(View view){
+            empieza.setText("start");
+            empieza.setEnabled(true);
+            pausa.setEnabled(false);
+            stop.setEnabled(false);
+            siguiente = false;
             wait = false;
-            para = false;
-            tick = new Tick();
-            tick.execute();
-        }else if(wait){
-            wait = false;
+            para = true;
             lock.lock();
             condition.signalAll();
             lock.unlock();
+            tiempo.setText(0+"");
+            tiempo.setVisibility(View.VISIBLE);
         }
-    }
-    public void onClickPausa(View view){
-        wait = true;
-        empieza.setEnabled(true);
-        pausa.setEnabled(false);
-        stop.setEnabled(false);
-        empieza.setText("Reanudar");
-    }
 
-    public void onClickStop(View view){
-        empieza.setText("start");
-        empieza.setEnabled(true);
-        pausa.setEnabled(false);
-        stop.setEnabled(false);
-        siguiente = false;
-        wait = false;
-        para = true;
-        lock.lock();
-        condition.signalAll();
-        lock.unlock();
-        tiempo.setText(0+"");
-        tiempo.setVisibility(View.VISIBLE);
-    }
+
 
     public class Tick extends AsyncTask<Void,Integer,Void> {
 

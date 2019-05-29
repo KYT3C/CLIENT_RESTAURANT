@@ -70,6 +70,11 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.MenuViewHolder
                        Fragment myFragment = new HomePageFragment();
                        activity.getSupportFragmentManager().beginTransaction().replace(R.id.container, myFragment).addToBackStack(null).commit();
                    }
+                   if (getAdapterPosition() == 4) {
+                       AppCompatActivity activity = (AppCompatActivity) itemView.getContext();
+                       Fragment myFragment = new TimerFragment();
+                       activity.getSupportFragmentManager().beginTransaction().replace(R.id.container, myFragment).addToBackStack(null).commit();
+                   }
                    if (getAdapterPosition() == 5) {
                        AppCompatActivity activity = (AppCompatActivity) itemView.getContext();
                        Fragment myFragment = new SettingsFragment();
