@@ -50,7 +50,7 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.MenuViewHolder
 
     public class MenuViewHolder extends RecyclerView.ViewHolder{
 
-        Fragment homePageFragment = new HomePageFragment();
+        Fragment menuFragment = new MenuFragment();
         Fragment timerFragment = new TimerFragment();
         Fragment settingsFragment = new SettingsFragment();
 
@@ -74,7 +74,7 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.MenuViewHolder
                    if (getAdapterPosition() == 1) {
                        AppCompatActivity activity = (AppCompatActivity) itemView.getContext();
 
-                       activity.getSupportFragmentManager().beginTransaction().replace(R.id.container, homePageFragment).addToBackStack(null).commit();
+                       activity.getSupportFragmentManager().beginTransaction().replace(R.id.container, menuFragment).addToBackStack(null).commit();
                    }
                    if (getAdapterPosition() == 4) {
                        AppCompatActivity activity = (AppCompatActivity) itemView.getContext();
