@@ -4,9 +4,14 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -58,13 +63,34 @@ public class MenuStarterFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_menu_starter, container, false);
+
+        View v = inflater.inflate(R.layout.fragment_menu_starter, container, false);
+
+        //Aquí debería pasarle 
+        List<Dish> dishList = new ArrayList<>();
+
+        dishList.add(new Dish("Macarrones","Macarroneeee",R.drawable.ic_bill));
+        dishList.add(new Dish("efwefwe","Macarroneeee",R.drawable.ic_bill));
+        dishList.add(new Dish("Macfearrones","Macarroneeee",R.drawable.ic_bill));
+        dishList.add(new Dish("Mnes","Macarroneeee",R.drawable.ic_bill));
+        dishList.add(new Dish("Macafwefwrrones","Macarroneeee",R.drawable.ic_bill));
+        dishList.add(new Dish("fwerrones","Macarroneeee",R.drawable.ic_bill));
+        dishList.add(new Dish("Mfwfrrones","Macarroneeee",R.drawable.ic_bill));
+
+
+        RecyclerView recyclerViewDish = v.findViewById(R.id.recyclerview_menu_starter_id);
+        MenuStarterAdapter recyclerViewAdapterDish = new MenuStarterAdapter(getContext(),dishList);
+        recyclerViewDish.setLayoutManager(new GridLayoutManager(getContext(),3));
+        recyclerViewDish.setAdapter(recyclerViewAdapterDish);
+
+        return v;
     }
 
     // TODO: Rename method, update argument and hook method into UI event
