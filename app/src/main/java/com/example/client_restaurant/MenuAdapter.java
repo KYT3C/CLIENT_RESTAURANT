@@ -18,6 +18,8 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.MenuViewHolder
     List<Item> mData;
     int selected_position = 0;
 
+
+
     public MenuAdapter(Context mContext, List<Item> mData) {
 
         this.mContext = mContext;
@@ -48,6 +50,10 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.MenuViewHolder
 
     public class MenuViewHolder extends RecyclerView.ViewHolder{
 
+        Fragment homePageFragment = new HomePageFragment();
+        Fragment timerFragment = new TimerFragment();
+        Fragment settingsFragment = new SettingsFragment();
+
         ImageView imgIcon;
 
         public  MenuViewHolder(@NonNull final View itemView){
@@ -67,18 +73,17 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.MenuViewHolder
 
                    if (getAdapterPosition() == 1) {
                        AppCompatActivity activity = (AppCompatActivity) itemView.getContext();
-                       Fragment myFragment = new HomePageFragment();
-                       activity.getSupportFragmentManager().beginTransaction().replace(R.id.container, myFragment).addToBackStack(null).commit();
+
+                       activity.getSupportFragmentManager().beginTransaction().replace(R.id.container, homePageFragment).addToBackStack(null).commit();
                    }
                    if (getAdapterPosition() == 4) {
                        AppCompatActivity activity = (AppCompatActivity) itemView.getContext();
-                       Fragment myFragment = new TimerFragment();
-                       activity.getSupportFragmentManager().beginTransaction().replace(R.id.container, myFragment).addToBackStack(null).commit();
+
+                       activity.getSupportFragmentManager().beginTransaction().replace(R.id.container, timerFragment).addToBackStack(null).commit();
                    }
                    if (getAdapterPosition() == 5) {
                        AppCompatActivity activity = (AppCompatActivity) itemView.getContext();
-                       Fragment myFragment = new SettingsFragment();
-                       activity.getSupportFragmentManager().beginTransaction().replace(R.id.container, myFragment).addToBackStack(null).commit();
+                       activity.getSupportFragmentManager().beginTransaction().replace(R.id.container, settingsFragment).addToBackStack(null).commit();
                    }
 
                }
