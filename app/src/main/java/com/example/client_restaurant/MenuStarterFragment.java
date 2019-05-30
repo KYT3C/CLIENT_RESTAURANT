@@ -1,7 +1,10 @@
 package com.example.client_restaurant;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
@@ -10,8 +13,19 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.net.Socket;
+import java.security.InvalidKeyException;
+import java.security.PublicKey;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.crypto.BadPaddingException;
+import javax.crypto.Cipher;
+import javax.crypto.IllegalBlockSizeException;
 
 
 /**
@@ -73,17 +87,16 @@ public class MenuStarterFragment extends Fragment {
 
         View v = inflater.inflate(R.layout.fragment_menu_starter, container, false);
 
-        //Aquí debería pasarle
+        GetDishAsyncTask getDishAsyncTask = new GetDishAsyncTask();
+        getDishAsyncTask.execute();
+        System.out.println("ESTO ES UNA " + getDishAsyncTask.getPatata());
         List<Dish> dishList = new ArrayList<>();
 
-        dishList.add(new Dish("Macarrones","Macarroneeee",R.drawable.ic_bill));
-        dishList.add(new Dish("efwefwe","Macarroneeee",R.drawable.ic_bill));
-        dishList.add(new Dish("Macfearrones","Macarroneeee",R.drawable.ic_bill));
-        dishList.add(new Dish("Mnes","Macarroneeee",R.drawable.ic_bill));
-        dishList.add(new Dish("Macafwefwrrones","Macarroneeee",R.drawable.ic_bill));
-        dishList.add(new Dish("fwerrones","Macarroneeee",R.drawable.ic_bill));
-        dishList.add(new Dish("Mfwfrrones","Macarroneeee",R.drawable.ic_bill));
 
+        for (int i = 0; i < getDishAsyncTask.getDishList().size(); i++) {
+
+            
+        }
 
         RecyclerView recyclerViewDish = v.findViewById(R.id.recyclerview_menu_starter_id);
         MenuStarterAdapter recyclerViewAdapterDish = new MenuStarterAdapter(getContext(),dishList);
@@ -125,5 +138,90 @@ public class MenuStarterFragment extends Fragment {
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
+    }
+
+    @SuppressLint("StaticFieldLeak")
+    class GetDishAsyncTask extends AsyncTask<String, Void, String> {
+
+        Socket sk;
+        DataInputStream dis;
+        DataOutputStream dos;
+        ObjectInputStream ois;
+        PublicKey publicKey;
+        List<Dish> dishList;
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+        }
+
+        @Override
+        protected String doInBackground(String... strings) {
+
+            try {
+                String ip = "192.168.137.1";
+                sk = new Socket(ip, 20002);
+                System.out.println("Establecida la conexión con " + ip);
+                dis = new DataInputStream(sk.getInputStream());
+                dos = new DataOutputStream(sk.getOutputStream());
+                ois = new ObjectInputStream(sk.getInputStream());
+
+                publicKey = (PublicKey) ois.readObject();
+
+                dos.writeInt(2);
+
+                int size = dis.readInt();
+
+                System.out.println("TAMAÑO LISTA : " + size);
+
+
+                for (int i = 0; i < size; i++) {
+
+                    String dishName = dis.readUTF();
+                    int idItemDish = dis.readInt();
+                    float price = dis.readFloat();
+                    int quantityStock = dis.readInt();
+                    int statusDish = dis.readInt();
+                    String descriptionDish = dis.readUTF();
+                    String dniKitchen = dis.readUTF();
+
+                    System.out.println("NOMBRE DEL PLATO: " + dishName);
+
+                    dishList.add(new Dish(dishName,idItemDish,price,quantityStock,statusDish,descriptionDish,dniKitchen));
+                    System.out.println(dishList.get(i));
+                }
+
+                sk.close();
+                dis.close();
+                dos.close();
+                ois.close();
+
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+
+            return null;
+
+
+
+        }
+
+        private String getPatata(){
+
+            return "Hola patata";
+        }
+
+        private List<Dish> getDishList(){
+
+            return dishList;
+        }
+
     }
 }

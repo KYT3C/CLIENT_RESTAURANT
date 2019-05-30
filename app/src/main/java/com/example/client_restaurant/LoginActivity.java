@@ -115,6 +115,11 @@ public class LoginActivity extends AppCompatActivity {
                 }
 
 
+                sk.close();
+                dis.close();
+                dos.close();
+                ois.close();
+
             } catch (IOException | ClassNotFoundException ex) {
                 ex.printStackTrace();
             }

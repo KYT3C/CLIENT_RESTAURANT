@@ -37,7 +37,7 @@ public class MenuStarterAdapter extends RecyclerView.Adapter<MenuStarterAdapter.
     public void onBindViewHolder(@NonNull StarterViewHolder starterViewHolder, int i) {
 
         starterViewHolder.textViewDishName.setText(mData.get(i).getName());
-        starterViewHolder.imageViewDishImage.setImageResource(mData.get(i).getImage());
+
     }
 
     @Override
