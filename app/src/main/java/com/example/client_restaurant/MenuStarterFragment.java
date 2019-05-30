@@ -41,6 +41,7 @@ public class MenuStarterFragment extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
+    List<Dish> dishList = new ArrayList<>();
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -80,28 +81,23 @@ public class MenuStarterFragment extends Fragment {
 
     }
 
+
+    MenuStarterAdapter recyclerViewAdapterDish;
+    RecyclerView recyclerViewDish;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
 
         View v = inflater.inflate(R.layout.fragment_menu_starter, container, false);
+        recyclerViewDish = v.findViewById(R.id.recyclerview_menu_starter_id);
+        //MenuStarterAdapter recyclerViewAdapterDish = new MenuStarterAdapter(getContext(),dishList);
+        //recyclerViewDish.setLayoutManager(new GridLayoutManager(getContext(),3));
+        //recyclerViewDish.setAdapter(recyclerViewAdapterDish);
 
         GetDishAsyncTask getDishAsyncTask = new GetDishAsyncTask();
         getDishAsyncTask.execute();
-        System.out.println("ESTO ES UNA " + getDishAsyncTask.getPatata());
-        List<Dish> dishList = new ArrayList<>();
-
-
-        for (int i = 0; i < getDishAsyncTask.getDishList().size(); i++) {
-
-            
-        }
-
-        RecyclerView recyclerViewDish = v.findViewById(R.id.recyclerview_menu_starter_id);
-        MenuStarterAdapter recyclerViewAdapterDish = new MenuStarterAdapter(getContext(),dishList);
-        recyclerViewDish.setLayoutManager(new GridLayoutManager(getContext(),3));
-        recyclerViewDish.setAdapter(recyclerViewAdapterDish);
 
         return v;
     }
@@ -148,7 +144,7 @@ public class MenuStarterFragment extends Fragment {
         DataOutputStream dos;
         ObjectInputStream ois;
         PublicKey publicKey;
-        List<Dish> dishList;
+        List<Dish> dishList2 = new ArrayList<Dish>();
 
         @Override
         protected void onPreExecute() {
@@ -158,6 +154,11 @@ public class MenuStarterFragment extends Fragment {
         @Override
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
+            dishList = dishList2;
+            recyclerViewAdapterDish = new MenuStarterAdapter(getContext(),dishList);
+            recyclerViewDish.setLayoutManager(new GridLayoutManager(getContext(),3));
+            recyclerViewDish.setAdapter(recyclerViewAdapterDish);
+
         }
 
         @Override
@@ -176,9 +177,7 @@ public class MenuStarterFragment extends Fragment {
                 dos.writeInt(2);
 
                 int size = dis.readInt();
-
                 System.out.println("TAMAÑO LISTA : " + size);
-
 
                 for (int i = 0; i < size; i++) {
 
@@ -192,14 +191,9 @@ public class MenuStarterFragment extends Fragment {
 
                     System.out.println("NOMBRE DEL PLATO: " + dishName);
 
-                    dishList.add(new Dish(dishName,idItemDish,price,quantityStock,statusDish,descriptionDish,dniKitchen));
-                    System.out.println(dishList.get(i));
+                    dishList2.add(new Dish(dishName,idItemDish,price,quantityStock,statusDish,descriptionDish,dniKitchen));
+                    System.out.println("TAMAÑO LISTA BUCLE: " + dishList2.size());
                 }
-
-                sk.close();
-                dis.close();
-                dos.close();
-                ois.close();
 
             } catch (IOException ex) {
                 ex.printStackTrace();
@@ -209,18 +203,6 @@ public class MenuStarterFragment extends Fragment {
 
             return null;
 
-
-
-        }
-
-        private String getPatata(){
-
-            return "Hola patata";
-        }
-
-        private List<Dish> getDishList(){
-
-            return dishList;
         }
 
     }
