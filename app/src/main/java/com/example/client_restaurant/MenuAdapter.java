@@ -53,6 +53,7 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.MenuViewHolder
         Fragment menuFragment = new MenuFragment();
         Fragment timerFragment = new TimerFragment();
         Fragment settingsFragment = new SettingsFragment();
+        Fragment ticketFragment = new TicketFragment();
 
         ImageView imgIcon;
 
@@ -75,6 +76,12 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.MenuViewHolder
                        AppCompatActivity activity = (AppCompatActivity) itemView.getContext();
 
                        activity.getSupportFragmentManager().beginTransaction().replace(R.id.container, menuFragment).addToBackStack(null).commit();
+                   }
+
+                   if(getAdapterPosition() == 2){
+                       AppCompatActivity activity = (AppCompatActivity) itemView.getContext();
+
+                       activity.getSupportFragmentManager().beginTransaction().replace(R.id.container, ticketFragment).addToBackStack(null).commit();
                    }
                    if (getAdapterPosition() == 4) {
                        AppCompatActivity activity = (AppCompatActivity) itemView.getContext();
