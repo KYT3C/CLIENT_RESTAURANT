@@ -66,8 +66,8 @@ public class TicketFragment extends Fragment {
     }
 
 
-    MenuStarterAdapter recyclerViewAdapterDish;
-    RecyclerView recyclerViewDish;
+    TicketAdapter recyclerViewAdapterTickets;
+    RecyclerView recyclerViewTickets;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -75,7 +75,7 @@ public class TicketFragment extends Fragment {
         // Inflate the layout for this fragment
 
         View v = inflater.inflate(R.layout.fragment_tickets, container, false);
-        recyclerViewDish = v.findViewById(R.id.recyclerview_tickets);
+        recyclerViewTickets = v.findViewById(R.id.recyclerview_tickets);
         //MenuStarterAdapter recyclerViewAdapterDish = new MenuStarterAdapter(getContext(),dishList);
         //recyclerViewDish.setLayoutManager(new GridLayoutManager(getContext(),3));
         //recyclerViewDish.setAdapter(recyclerViewAdapterDish);
@@ -139,9 +139,9 @@ public class TicketFragment extends Fragment {
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
             ticketList = ticketList2;
-            //recyclerViewAdapterDish = new MenuStarterAdapter(getContext(),ticketList);
-            recyclerViewDish.setLayoutManager(new GridLayoutManager(getContext(),3));
-            recyclerViewDish.setAdapter(recyclerViewAdapterDish);
+            recyclerViewAdapterTickets = new TicketAdapter(getContext(),ticketList);
+            recyclerViewTickets.setLayoutManager(new GridLayoutManager(getContext(),3));
+            recyclerViewTickets.setAdapter(recyclerViewAdapterTickets);
 
         }
 
@@ -149,13 +149,12 @@ public class TicketFragment extends Fragment {
         protected String doInBackground(String... strings) {
 
             try {
-                String ip = "192.168.137.1";
+                String ip = "192.168.1.109";
                 sk = new Socket(ip, 20002);
                 System.out.println("Establecida la conexión con " + ip);
                 dis = new DataInputStream(sk.getInputStream());
                 dos = new DataOutputStream(sk.getOutputStream());
                 ois = new ObjectInputStream(sk.getInputStream());
-
                 publicKey = (PublicKey) ois.readObject();
 
                 dos.writeInt(2);
@@ -165,15 +164,11 @@ public class TicketFragment extends Fragment {
 
                 for (int i = 0; i < size; i++) {
 
-                    String dishName = dis.readUTF();
-                    int idItemDish = dis.readInt();
-                    float price = dis.readFloat();
-                    int quantityStock = dis.readInt();
-                    int statusDish = dis.readInt();
-                    String descriptionDish = dis.readUTF();
-                    String dniKitchen = dis.readUTF();
+                    Integer idTicket = dis.readInt();
+                    Float totalPrice = dis.readFloat();
+                    Integer idTable = dis.readInt();
 
-                    System.out.println("NOMBRE DEL PLATO: " + dishName);
+                    System.out.println("ID TICKET: : " + idTicket + "/nPRECIO : " + totalPrice + "/nID TABLE : " + idTable);
 
                     //dishList2.add(new Dish(dishName,idItemDish,price,quantityStock,statusDish,descriptionDish,dniKitchen));
                     //System.out.println("TAMAÑO LISTA BUCLE: " + dishList2.size());

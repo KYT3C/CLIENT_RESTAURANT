@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="150dp"
+    xmlns:cardview="http://schemas.android.com/apk/res-auto"
+    android:layout_margin="5dp"
+    cardview:cardCornerRadius="4dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/ticket_id"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+
+            android:text="ID Ticket: "
+            android:textSize="13sp"
+            android:gravity="top"/>
+
+        <TextView
+            android:id="@+id/ticket_precio"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/ticket_id"
+            android:text="Preu Ticket: "
+            android:textSize="13sp"/>
+    </LinearLayout>
+
+</android.support.constraint.ConstraintLayout>

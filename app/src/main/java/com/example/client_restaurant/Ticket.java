@@ -6,9 +6,10 @@ public class Ticket {
     private Float totalPrice;
     private Integer idTable;
 
-    public Ticket(Float totalPrice, Integer idTable) {
+    public Ticket(Float totalPrice, Integer idTable, Integer idTicket) {
         this.totalPrice = totalPrice;
         this.idTable = idTable;
+        this.idTicket = idTicket;
     }
 
     public Integer getIdTicket() {
