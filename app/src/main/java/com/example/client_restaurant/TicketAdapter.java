@@ -28,7 +28,7 @@ public class TicketAdapter extends RecyclerView.Adapter<TicketAdapter.StarterVie
 
         View view;
         LayoutInflater mInflater = LayoutInflater.from(mContext);
-        view = mInflater.inflate(R.layout.cardview_item_dish, viewGroup ,false);
+        view = mInflater.inflate(R.layout.cardview_tickets, viewGroup ,false);
 
         return new StarterViewHolder(view);
     }
@@ -36,7 +36,7 @@ public class TicketAdapter extends RecyclerView.Adapter<TicketAdapter.StarterVie
     @Override
     public void onBindViewHolder(@NonNull StarterViewHolder starterViewHolder, int i) {
 
-        starterViewHolder.textViewDishName.setText(mData.toString());
+        starterViewHolder.textViewIDTable.setText(mData.toString());
 
     }
 
@@ -47,14 +47,14 @@ public class TicketAdapter extends RecyclerView.Adapter<TicketAdapter.StarterVie
 
     public static class StarterViewHolder extends RecyclerView.ViewHolder{
 
-        TextView textViewDishName;
-        ImageView imageViewDishImage;
+        TextView textViewIDTable;
+        TextView textViewPriceTicket;
 
         public StarterViewHolder(@NonNull View itemView) {
             super(itemView);
 
-            textViewDishName = itemView.findViewById(R.id.dish_name_id);
-            imageViewDishImage = itemView.findViewById(R.id.dish_img_id);
+            textViewIDTable = itemView.findViewById(R.id.ticket_id);
+            textViewPriceTicket = itemView.findViewById(R.id.ticket_precio);
         }
     }
 }
