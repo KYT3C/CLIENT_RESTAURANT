@@ -11,7 +11,6 @@
     <string name="alert_dialog_dish_image_description">Dish Image</string>
     <string name="alert_dialog_dish_plus">+</string>
     <string name="alert_dialog_dish_minus">-</string>
-    <string name="alert_dialog_stock_count"> </string>
     <string name="id_ticket">ID Ticket:</string>
     <string name="preu_ticket">Preu Ticket:</string>
 </resources>

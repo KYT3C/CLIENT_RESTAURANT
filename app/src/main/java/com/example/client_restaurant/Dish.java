@@ -78,4 +78,12 @@ public class Dish {
         this.dniKitchen = dniKitchen;
     }
 
+    public void addDishStock(){
+
+        setQuantityStock(getQuantityStock() + 1);
+    }
+    public void minusDishStock(){
+
+        setQuantityStock(getQuantityStock() - 1);
+    }
 }

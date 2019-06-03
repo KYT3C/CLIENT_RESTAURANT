@@ -2,7 +2,6 @@ package com.example.client_restaurant;
 
 import android.annotation.SuppressLint;
 
-import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;

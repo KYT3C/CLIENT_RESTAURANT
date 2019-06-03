@@ -21,7 +21,6 @@ public class HomePageActivity extends AppCompatActivity {
     public static final int TABLES_CODE = 3;
     public static final int STOPWATCH_CODE = 4;
     public static final int SETTINGS_CODE = 5;
-    public static final int STOCK_CODE = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,7 +38,6 @@ public class HomePageActivity extends AppCompatActivity {
         mData.add(new Item(R.drawable.ic_tables,TABLES_CODE,"Tables Fragment"));
         mData.add(new Item(R.drawable.ic_stopwatch,STOPWATCH_CODE,"Stopwatch Fragment"));
         mData.add(new Item(R.drawable.ic_settings,SETTINGS_CODE,"Settings Fragment"));
-
 
         menuAdapter = new MenuAdapter(HomePageActivity.this,mData);
         recyclerView.setAdapter(menuAdapter);

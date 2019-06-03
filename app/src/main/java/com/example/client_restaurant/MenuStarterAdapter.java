@@ -3,15 +3,25 @@ package com.example.client_restaurant;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
+
 import android.media.Image;
+import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+
+import java.net.Socket;
+import java.security.PublicKey;
 import java.util.List;
 
 public class MenuStarterAdapter extends RecyclerView.Adapter<MenuStarterAdapter.StarterViewHolder> {
@@ -48,41 +58,146 @@ public class MenuStarterAdapter extends RecyclerView.Adapter<MenuStarterAdapter.
         return mData.size();
     }
 
-     class StarterViewHolder extends RecyclerView.ViewHolder{
+     class StarterViewHolder extends RecyclerView.ViewHolder {
 
 
-        TextView textViewDishName;
-        ImageView imageViewDishImage;
+         TextView textViewDishName;
+         ImageView imageViewDishImage;
 
          StarterViewHolder(@NonNull final View itemView) {
-            super(itemView);
+             super(itemView);
 
-            textViewDishName = itemView.findViewById(R.id.dish_name_id);
-            imageViewDishImage = itemView.findViewById(R.id.dish_img_id);
+             textViewDishName = itemView.findViewById(R.id.dish_name_id);
+             imageViewDishImage = itemView.findViewById(R.id.dish_img_id);
 
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
+             itemView.setOnClickListener(new View.OnClickListener() {
+                 @Override
+                 public void onClick(View v) {
 
-                    AlertDialog.Builder alertDialog = new AlertDialog.Builder(mContext);
-                    LayoutInflater mInflater2 = LayoutInflater.from(mContext);
-                    @SuppressLint("InflateParams") final View customLayout = mInflater2.inflate(R.layout.dish_info_layout, null);
-                    TextView dishName = customLayout.findViewById(R.id.textViewAlertDialogDishName);
-                    dishName.setText(mData.get(getAdapterPosition()).getName());
-                    ImageView dishImage = customLayout.findViewById(R.id.imageViewAlertDialogDishImage);
+                     AlertDialog.Builder alertDialog = new AlertDialog.Builder(mContext);
+                     LayoutInflater mInflater2 = LayoutInflater.from(mContext);
+                     @SuppressLint("InflateParams") final View customLayout = mInflater2.inflate(R.layout.dish_info_layout, null);
 
-                    TextView dishDescription = customLayout.findViewById(R.id.textViewAlertDialogDishDescription);
-                    dishDescription.setText(mData.get(getAdapterPosition()).getDescriptionDish());
-                    alertDialog.setView(customLayout);
-                    alertDialog.create();
-                    alertDialog.show();
-                }
-            });
-        }
-        private Image getDishImage(){
+                     TextView dishName = customLayout.findViewById(R.id.textViewAlertDialogDishName);
+                     dishName.setText(mData.get(getAdapterPosition()).getName());
+
+                     ImageView dishImage = customLayout.findViewById(R.id.imageViewAlertDialogDishImage);
+
+                     TextView dishDescription = customLayout.findViewById(R.id.textViewAlertDialogDishDescription);
+                     dishDescription.setText(mData.get(getAdapterPosition()).getDescriptionDish());
+
+                     final TextView dishStock = customLayout.findViewById(R.id.textViewAlertDialogDishStock);
+                     dishStock.setText(Integer.toString(mData.get(getAdapterPosition()).getQuantityStock()));
+
+                     Button btnMinus = customLayout.findViewById(R.id.btnMinusStockDish);
+                     btnMinus.setOnClickListener(new View.OnClickListener() {
+                         @Override
+                         public void onClick(View v) {
+
+                             mData.get(getAdapterPosition()).minusDishStock();
+
+                             dishStock.setText(Integer.toString(mData.get(getAdapterPosition()).getQuantityStock()));
+                             UpdateDishAsyncTask updateDishAsyncTask = new UpdateDishAsyncTask(mData.get(getAdapterPosition()));
+                             updateDishAsyncTask.execute();
+
+                         }
+                     });
+
+                     Button btnAdd = customLayout.findViewById(R.id.btnAddStockDish);
+                     btnAdd.setOnClickListener(new View.OnClickListener() {
+                         @Override
+                         public void onClick(View v) {
+
+                             mData.get(getAdapterPosition()).addDishStock();
+
+                             dishStock.setText(Integer.toString(mData.get(getAdapterPosition()).getQuantityStock()));
+                             UpdateDishAsyncTask updateDishAsyncTask = new UpdateDishAsyncTask(mData.get(getAdapterPosition()));
+                             updateDishAsyncTask.execute();
+
+                         }
+                     });
+
+                     alertDialog.setView(customLayout);
+                     alertDialog.create();
+                     alertDialog.show();
+                 }
+             });
+         }
+
+         private Image getDishImage() {
 
              Image dishImage = null;
              return dishImage;
-        }
-    }
+         }
+
+         @SuppressLint("StaticFieldLeak")
+         class UpdateDishAsyncTask extends AsyncTask<String, Void, String> {
+
+             Socket sk;
+             PublicKey publicKey;
+             DataInputStream dis;
+             DataOutputStream dos;
+             ObjectInputStream ois;
+             Dish dish;
+             //ProgressDialog dialog;
+
+             UpdateDishAsyncTask(Dish dish) {
+
+                 this.dish = dish;
+             }
+
+             @Override
+             protected void onPreExecute() {
+                 super.onPreExecute();
+            /*
+            dialog = new ProgressDialog(LoginActivity.this);
+            dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+            dialog.setMessage("Cargando. porfavor espere...");
+            dialog.setIndeterminate(true);
+            dialog.setCanceledOnTouchOutside(false);
+            dialog.show();
+            */
+             }
+
+             @Override
+             protected void onPostExecute(String s) {
+                 super.onPostExecute(s);
+                 //dialog.dismiss();
+             }
+
+             @Override
+             protected String doInBackground(String... strings) {
+
+                 try {
+                     String ip = "192.168.137.1";
+                     sk = new Socket(ip, 20002);
+                     System.out.println("Establecida la conexión con " + ip);
+                     dis = new DataInputStream(sk.getInputStream());
+                     dos = new DataOutputStream(sk.getOutputStream());
+                     ois = new ObjectInputStream(sk.getInputStream());
+
+                     publicKey = (PublicKey) ois.readObject();
+
+                     dos.writeInt(4);
+
+                     dos.writeInt(mData.get(getAdapterPosition()).getIdItemDish());
+                     dos.writeInt(mData.get(getAdapterPosition()).getQuantityStock());
+
+                     System.out.println(mData.get(getAdapterPosition()).getIdItemDish());
+
+                     sk.close();
+                     dis.close();
+                     dos.close();
+                     ois.close();
+
+                 } catch (IOException | ClassNotFoundException ex) {
+                     ex.printStackTrace();
+                 }
+
+                 return null;
+
+
+             }
+         }
+     }
 }
