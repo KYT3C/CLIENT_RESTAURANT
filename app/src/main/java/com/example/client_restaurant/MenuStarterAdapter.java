@@ -1,7 +1,9 @@
 package com.example.client_restaurant;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
+import android.media.Image;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -63,14 +65,25 @@ public class MenuStarterAdapter extends RecyclerView.Adapter<MenuStarterAdapter.
                 public void onClick(View v) {
 
                     AlertDialog.Builder alertDialog = new AlertDialog.Builder(mContext);
-                    alertDialog.setMessage("Nombre: " + mData.get(getAdapterPosition()).getName());
                     LayoutInflater mInflater2 = LayoutInflater.from(mContext);
-                    final View customLayout = mInflater2.inflate(R.layout.dish_info_layout, null);
+                    @SuppressLint("InflateParams") final View customLayout = mInflater2.inflate(R.layout.dish_info_layout, null);
+                    TextView dishName = customLayout.findViewById(R.id.textViewAlertDialogDishName);
+                    dishName.setText(mData.get(getAdapterPosition()).getName());
+                    ImageView dishImage = customLayout.findViewById(R.id.imageViewAlertDialogDishImage);
+
+
+                    TextView dishDescription = customLayout.findViewById(R.id.textViewAlertDialogDishDescription);
+                    dishDescription.setText(mData.get(getAdapterPosition()).getDescriptionDish());
                     alertDialog.setView(customLayout);
                     alertDialog.create();
                     alertDialog.show();
                 }
             });
+        }
+        private Image getDishImage(){
+
+             Image dishImage = null;
+             return dishImage;
         }
     }
 }
