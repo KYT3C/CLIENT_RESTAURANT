@@ -40,7 +40,6 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-
         //Button para hacer Login.
         Button buttonLogin = findViewById(R.id.buttonLogin);
 
@@ -93,7 +92,8 @@ public class LoginActivity extends AppCompatActivity {
         protected String doInBackground(String... strings) {
 
             try {
-                String ip = "192.168.137.1";
+                Connection connection = new Connection();
+                String ip = connection.getIp();
                 sk = new Socket(ip, 20002);
                 System.out.println("Establecida la conexión con " + ip);
                 dis = new DataInputStream(sk.getInputStream());
