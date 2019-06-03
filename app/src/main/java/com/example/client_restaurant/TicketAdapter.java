@@ -1,5 +1,6 @@
 package com.example.client_restaurant;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
@@ -33,11 +34,12 @@ public class TicketAdapter extends RecyclerView.Adapter<TicketAdapter.StarterVie
         return new StarterViewHolder(view);
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     public void onBindViewHolder(@NonNull StarterViewHolder starterViewHolder, int i) {
 
-        starterViewHolder.textViewIDTable.setText(mData.toString());
-
+        starterViewHolder.textViewIDTable.setText("ID Ticket : " + Integer.toString(mData.get(i).getIdTicket()));
+        starterViewHolder.textViewPriceTicket.setText("Precio : " + Float.toString(mData.get(i).getTotalPrice()));
     }
 
     @Override
