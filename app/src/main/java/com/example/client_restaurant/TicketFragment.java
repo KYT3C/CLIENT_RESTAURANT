@@ -168,10 +168,10 @@ public class TicketFragment extends Fragment {
                     Float totalPrice = dis.readFloat();
                     Integer idTable = dis.readInt();
 
-                    System.out.println("ID TICKET: : " + idTicket + "/nPRECIO : " + totalPrice + "/nID TABLE : " + idTable);
+                    System.out.println("ID TICKET: : " + idTicket + "\nPRECIO : " + totalPrice + "\nID TABLE : " + idTable);
 
-                    //dishList2.add(new Dish(dishName,idItemDish,price,quantityStock,statusDish,descriptionDish,dniKitchen));
-                    //System.out.println("TAMAÑO LISTA BUCLE: " + dishList2.size());
+                    ticketList2.add(new Ticket(totalPrice,idTable,idTicket));
+                    System.out.println("TAMAÑO LISTA BUCLE: " + ticketList2.size());
                 }
 
             } catch (IOException ex) {
@@ -179,6 +179,7 @@ public class TicketFragment extends Fragment {
             } catch (ClassNotFoundException e) {
                 e.printStackTrace();
             }
+
 
             return null;
 
