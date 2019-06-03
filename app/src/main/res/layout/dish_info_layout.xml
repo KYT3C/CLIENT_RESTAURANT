@@ -19,7 +19,8 @@
         android:id="@+id/imageViewAlertDialogDishImage"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        tools:srcCompat="@tools:sample/avatars[3]" />
+        tools:srcCompat="@tools:sample/avatars[3]"
+        android:contentDescription="@string/alert_dialog_dish_image_description"/>
 
     <TextView
         android:id="@+id/textViewAlertDialogDishDescription"
@@ -27,5 +28,45 @@
         android:layout_height="wrap_content"
         android:text=""
         android:textAlignment="center"/>
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <Button
+            android:id="@+id/btnAddStockDish"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="60dp"
+            android:layout_marginEnd="8dp"
+            android:text="@string/alert_dialog_dish_plus"
+            android:textSize="18sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <Button
+            android:id="@+id/btnMinusStockDish"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="60dp"
+            android:text="@string/alert_dialog_dish_minus"
+            android:textSize="18sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/textView4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="60dp"
+            android:layout_marginEnd="8dp"
+            android:text="@string/alert_dialog_stock_count"
+            android:textSize="36sp"
+            app:layout_constraintEnd_toStartOf="@+id/btnAddStockDish"
+            app:layout_constraintStart_toEndOf="@+id/btnMinusStockDish"
+            app:layout_constraintTop_toTopOf="parent" />
+    </android.support.constraint.ConstraintLayout>
 
 </LinearLayout>

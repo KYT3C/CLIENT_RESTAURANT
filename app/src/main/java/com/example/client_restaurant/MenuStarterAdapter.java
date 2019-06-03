@@ -71,7 +71,6 @@ public class MenuStarterAdapter extends RecyclerView.Adapter<MenuStarterAdapter.
                     dishName.setText(mData.get(getAdapterPosition()).getName());
                     ImageView dishImage = customLayout.findViewById(R.id.imageViewAlertDialogDishImage);
 
-
                     TextView dishDescription = customLayout.findViewById(R.id.textViewAlertDialogDishDescription);
                     dishDescription.setText(mData.get(getAdapterPosition()).getDescriptionDish());
                     alertDialog.setView(customLayout);
