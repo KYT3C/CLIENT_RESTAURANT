@@ -14,19 +14,18 @@
         <TextView
             android:id="@+id/ticket_id"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="51dp"
 
-            android:text="ID Ticket: "
-            android:textSize="13sp"
-            android:gravity="top"/>
+            android:gravity="top"
+            android:text="@string/id_ticket"
+            android:textSize="13sp" />
 
         <TextView
             android:id="@+id/ticket_precio"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@+id/ticket_id"
-            android:text="Preu Ticket: "
-            android:textSize="13sp"/>
+            android:layout_height="45dp"
+            android:text="@string/preu_ticket"
+            android:textSize="13sp" />
     </LinearLayout>
 
 </android.support.constraint.ConstraintLayout>

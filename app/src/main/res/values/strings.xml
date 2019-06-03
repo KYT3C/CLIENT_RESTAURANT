@@ -8,4 +8,6 @@
     <string name="btnStart">Start</string>
     <string name="txtCont"></string>
     <string name="btnAsinc">Wine Timer</string>
+    <string name="id_ticket">ID Ticket:</string>
+    <string name="preu_ticket">Preu Ticket:</string>
 </resources>
