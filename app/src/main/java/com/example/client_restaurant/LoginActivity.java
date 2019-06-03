@@ -68,24 +68,26 @@ public class LoginActivity extends AppCompatActivity {
         DataOutputStream dos;
         ObjectInputStream ois;
         Cipher rsa = null;
-        ProgressDialog dialog;
+        //ProgressDialog dialog;
 
 
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
+            /*
             dialog = new ProgressDialog(LoginActivity.this);
             dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
             dialog.setMessage("Cargando. porfavor espere...");
             dialog.setIndeterminate(true);
             dialog.setCanceledOnTouchOutside(false);
             dialog.show();
+            */
         }
 
         @Override
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
-            dialog.dismiss();
+            //dialog.dismiss();
         }
 
         @Override

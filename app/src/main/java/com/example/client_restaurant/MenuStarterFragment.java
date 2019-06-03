@@ -147,23 +147,23 @@ public class MenuStarterFragment extends Fragment {
         ObjectInputStream ois;
         PublicKey publicKey;
         List<Dish> dishList2 = new ArrayList<Dish>();
-        ProgressDialog dialog;
+        //ProgressDialog dialog;
 
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            dialog = new ProgressDialog(getContext());
+            /*dialog = new ProgressDialog(getContext());
             dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
             dialog.setMessage("Cargando. porfavor espere...");
             dialog.setIndeterminate(true);
             dialog.setCanceledOnTouchOutside(false);
-            dialog.show();
+            dialog.show();*/
         }
 
         @Override
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
-            dialog.dismiss();
+            //dialog.dismiss();
             dishList = dishList2;
             recyclerViewAdapterDish = new MenuStarterAdapter(getContext(),dishList);
             recyclerViewDish.setLayoutManager(new GridLayoutManager(getContext(),3));
