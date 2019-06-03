@@ -1,5 +1,6 @@
 package com.example.client_restaurant;
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
@@ -9,8 +10,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.lang.reflect.Array;
-import java.util.ArrayList;
 import java.util.List;
 
 public class MenuStarterAdapter extends RecyclerView.Adapter<MenuStarterAdapter.StarterViewHolder> {
@@ -19,7 +18,7 @@ public class MenuStarterAdapter extends RecyclerView.Adapter<MenuStarterAdapter.
     private Context mContext;
     private List<Dish> mData;
 
-    public MenuStarterAdapter(Context mContext, List<Dish> mData) {
+     MenuStarterAdapter(Context mContext, List<Dish> mData) {
         this.mContext = mContext;
         this.mData = mData;
     }
@@ -47,16 +46,31 @@ public class MenuStarterAdapter extends RecyclerView.Adapter<MenuStarterAdapter.
         return mData.size();
     }
 
-    public static class StarterViewHolder extends RecyclerView.ViewHolder{
+     class StarterViewHolder extends RecyclerView.ViewHolder{
+
 
         TextView textViewDishName;
         ImageView imageViewDishImage;
 
-        public StarterViewHolder(@NonNull View itemView) {
+         StarterViewHolder(@NonNull final View itemView) {
             super(itemView);
 
             textViewDishName = itemView.findViewById(R.id.dish_name_id);
             imageViewDishImage = itemView.findViewById(R.id.dish_img_id);
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    AlertDialog.Builder alertDialog = new AlertDialog.Builder(mContext);
+                    alertDialog.setMessage("Nombre: " + mData.get(getAdapterPosition()).getName());
+                    LayoutInflater mInflater2 = LayoutInflater.from(mContext);
+                    final View customLayout = mInflater2.inflate(R.layout.dish_info_layout, null);
+                    alertDialog.setView(customLayout);
+                    alertDialog.create();
+                    alertDialog.show();
+                }
+            });
         }
     }
 }

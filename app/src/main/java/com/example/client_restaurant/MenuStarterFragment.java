@@ -1,6 +1,7 @@
 package com.example.client_restaurant;
 
 import android.annotation.SuppressLint;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -12,6 +13,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -145,15 +147,23 @@ public class MenuStarterFragment extends Fragment {
         ObjectInputStream ois;
         PublicKey publicKey;
         List<Dish> dishList2 = new ArrayList<Dish>();
+        ProgressDialog dialog;
 
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
+            dialog = new ProgressDialog(getContext());
+            dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+            dialog.setMessage("Cargando. porfavor espere...");
+            dialog.setIndeterminate(true);
+            dialog.setCanceledOnTouchOutside(false);
+            dialog.show();
         }
 
         @Override
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
+            dialog.dismiss();
             dishList = dishList2;
             recyclerViewAdapterDish = new MenuStarterAdapter(getContext(),dishList);
             recyclerViewDish.setLayoutManager(new GridLayoutManager(getContext(),3));

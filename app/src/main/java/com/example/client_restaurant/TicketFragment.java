@@ -157,7 +157,7 @@ public class TicketFragment extends Fragment {
                 ois = new ObjectInputStream(sk.getInputStream());
                 publicKey = (PublicKey) ois.readObject();
 
-                dos.writeInt(2);
+                dos.writeInt(3);
 
                 int size = dis.readInt();
                 System.out.println("TAMAÑO LISTA : " + size);

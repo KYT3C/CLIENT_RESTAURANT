@@ -2,6 +2,7 @@ package com.example.client_restaurant;
 
 import android.annotation.SuppressLint;
 
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -67,16 +68,24 @@ public class LoginActivity extends AppCompatActivity {
         DataOutputStream dos;
         ObjectInputStream ois;
         Cipher rsa = null;
+        ProgressDialog dialog;
 
 
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
+            dialog = new ProgressDialog(LoginActivity.this);
+            dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+            dialog.setMessage("Cargando. porfavor espere...");
+            dialog.setIndeterminate(true);
+            dialog.setCanceledOnTouchOutside(false);
+            dialog.show();
         }
 
         @Override
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
+            dialog.dismiss();
         }
 
         @Override
