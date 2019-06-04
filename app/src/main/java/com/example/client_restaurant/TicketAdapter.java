@@ -3,6 +3,7 @@ package com.example.client_restaurant;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
+import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -14,6 +15,7 @@ import android.widget.TextView;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 
+import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.net.Socket;
 import java.security.PublicKey;
@@ -70,29 +72,18 @@ public class TicketAdapter extends RecyclerView.Adapter<TicketAdapter.StarterVie
 
                 @Override
                 public void onClick(View v) {
+                    SetIdAsyncTask setIdAsyncTask = new SetIdAsyncTask(mData.get(getAdapterPosition()).getIdTicket());
+                    setIdAsyncTask.execute();
+
                     AlertDialog.Builder alertDialog = new AlertDialog.Builder(mContext);
                     LayoutInflater mInflater2 = LayoutInflater.from(mContext);
                     @SuppressLint("InflateParams") final View customLayout = mInflater2.inflate(R.layout.ticket_info_layout, null);
                     TextView ticketInfo = customLayout.findViewById(R.id.textViewAlertDialogTicketInfo);
-                    try {
+
                         System.out.println(mData.get(getAdapterPosition()).getIdTicket());
 
-                        Connection connection = new Connection();
-                        String ip = connection.getIp();
-                        Socket sk = new Socket(ip, 20002);
-                        System.out.println("Establecida la conexión con " + ip);
-                        DataInputStream dis = new DataInputStream(sk.getInputStream());
-                        DataOutputStream dos = new DataOutputStream(sk.getOutputStream());
-                        ObjectInputStream ois = new ObjectInputStream(sk.getInputStream());
-                        PublicKey publicKey = (PublicKey) ois.readObject();
-                        dos.writeInt(7);
 
 
-                        dos.writeInt(mData.get(getAdapterPosition()).getIdTicket());
-
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
 
 
 
@@ -100,6 +91,64 @@ public class TicketAdapter extends RecyclerView.Adapter<TicketAdapter.StarterVie
 
                 }
             });
+        }
+        @SuppressLint("StaticFieldLeak")
+        class SetIdAsyncTask extends AsyncTask<String, Void, String> {
+
+            Socket sk;
+            PublicKey publicKey;
+            DataInputStream dis;
+            DataOutputStream dos;
+            ObjectInputStream ois;
+            int idTicket;
+
+
+
+            @Override
+            protected void onPreExecute() {
+                super.onPreExecute();
+            }
+            public SetIdAsyncTask(int idTicket) {
+
+                this.idTicket = idTicket;
+
+            }
+
+            @Override
+            protected void onPostExecute(String s) {
+                super.onPostExecute(s);
+                //dialog.dismiss();
+            }
+
+            @Override
+            protected String doInBackground(String... strings) {
+
+                try {
+                    Connection connection = new Connection();
+                    String ip = connection.getIp();
+                    sk = new Socket(ip, 20002);
+                    System.out.println("Establecida la conexión con " + ip);
+                    dis = new DataInputStream(sk.getInputStream());
+                    dos = new DataOutputStream(sk.getOutputStream());
+                    ois = new ObjectInputStream(sk.getInputStream());
+                    publicKey = (PublicKey) ois.readObject();
+                    dos.writeInt(7);
+                    dos.writeInt(idTicket);
+                    //dis.readUTF();
+
+                    sk.close();
+                    dis.close();
+                    dos.close();
+                    ois.close();
+
+                } catch (IOException | ClassNotFoundException ex) {
+                    ex.printStackTrace();
+                }
+
+                return null;
+
+
+            }
         }
     }
 }
