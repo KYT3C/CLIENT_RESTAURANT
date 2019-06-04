@@ -199,7 +199,6 @@ public class MenuStarterAdapter extends RecyclerView.Adapter<MenuStarterAdapter.
                      if(option == 2){
                          dos.writeInt(5);
                          dos.writeInt(mData.get(getAdapterPosition()).getIdItemDish());
-
                          System.out.println("Elimino cosas");
                      }
 
