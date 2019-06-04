@@ -25,7 +25,7 @@ public class MenuDrinkAdapter extends RecyclerView.Adapter<MenuDrinkAdapter.Drin
 
 
     private Context mContext;
-    private List<Dish> mData;
+    private List<Drink> mData;
 
      MenuDrinkAdapter(Context mContext, List<Drink> mData) {
         this.mContext = mContext;
@@ -122,8 +122,8 @@ public class MenuDrinkAdapter extends RecyclerView.Adapter<MenuDrinkAdapter.Drin
                          @Override
                          public void onClick(View v) {
 
-                             UpdateDrinkAsyncTask updateDishAsyncTask = new UpdateDrinkAsyncTask(mData.get(getAdapterPosition()),2);
-                             updateDishAsyncTask.execute();
+                             UpdateDrinkAsyncTask updateDrinkAsyncTask = new UpdateDrinkAsyncTask(mData.get(getAdapterPosition()),2);
+                             updateDrinkAsyncTask.execute();
                              alert.cancel();
 
 
@@ -144,12 +144,12 @@ public class MenuDrinkAdapter extends RecyclerView.Adapter<MenuDrinkAdapter.Drin
              DataOutputStream dos;
              ObjectInputStream ois;
 
-             Dish dish;
+             Drink drink;
              int option;
 
-             public UpdateDrinkAsyncTask(Dish dish, int option) {
+             public UpdateDrinkAsyncTask(Drink drink, int option) {
 
-                 this.dish = dish;
+                 this.drink = drink;
                  this.option = option;
              }
 
@@ -178,14 +178,12 @@ public class MenuDrinkAdapter extends RecyclerView.Adapter<MenuDrinkAdapter.Drin
                      publicKey = (PublicKey) ois.readObject();
 
                      if(option == 1) {
-                         dos.writeInt(4);
+                         dos.writeInt(10);
                          dos.writeInt(mData.get(getAdapterPosition()).getIdItemDish());
                          dos.writeInt(mData.get(getAdapterPosition()).getQuantityStock());
-
-                         System.out.println(mData.get(getAdapterPosition()).getIdItemDish());
                      }
                      if(option == 2){
-                         dos.writeInt(5);
+                         dos.writeInt(11);
                          dos.writeInt(mData.get(getAdapterPosition()).getIdItemDish());
                          System.out.println("Elimino cosas");
                      }

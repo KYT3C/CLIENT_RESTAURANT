@@ -70,11 +70,13 @@ public class MenuFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
+        final Fragment fragmentMenuDrinks = new MenuDrinkFragment();
         final Fragment fragmentMenuStarter = new MenuStarterFragment();
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_menu, container, false);
 
         Button btnStarter = v.findViewById(R.id.btnStarter);
+        Button btnDrinks = v.findViewById(R.id.btnDrinks);
 
         btnStarter.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -86,6 +88,15 @@ public class MenuFragment extends Fragment {
             }
         });
 
+        btnDrinks.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                AppCompatActivity activity = (AppCompatActivity) v.getContext();
+
+                activity.getSupportFragmentManager().beginTransaction().replace(R.id.container, fragmentMenuDrinks).addToBackStack(null).commit();
+            }
+        });
         return v;
     }
 
