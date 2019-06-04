@@ -80,7 +80,7 @@ public class TicketFragment extends Fragment {
         //recyclerViewDish.setLayoutManager(new GridLayoutManager(getContext(),3));
         //recyclerViewDish.setAdapter(recyclerViewAdapterDish);
 
-        TicketFragment.GetDishAsyncTask getDishAsyncTask = new TicketFragment.GetDishAsyncTask();
+        TicketFragment.GetTicketAsyncTask getDishAsyncTask = new GetTicketAsyncTask();
         getDishAsyncTask.execute();
 
         return v;
@@ -121,7 +121,7 @@ public class TicketFragment extends Fragment {
     }
 
     @SuppressLint("StaticFieldLeak")
-    class GetDishAsyncTask extends AsyncTask<String, Void, String> {
+    class GetTicketAsyncTask extends AsyncTask<String, Void, String> {
 
         Socket sk;
         DataInputStream dis;

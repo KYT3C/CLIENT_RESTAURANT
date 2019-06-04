@@ -139,7 +139,7 @@ public class MenuStarterFragment extends Fragment {
     }
 
     @SuppressLint("StaticFieldLeak")
-    class GetDishAsyncTask extends AsyncTask<String, Void, String> {
+    public class GetDishAsyncTask extends AsyncTask<String, Void, String> {
 
         Socket sk;
         DataInputStream dis;

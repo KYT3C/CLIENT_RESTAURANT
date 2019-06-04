@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
 
-import android.media.Image;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
@@ -74,9 +73,13 @@ public class MenuStarterAdapter extends RecyclerView.Adapter<MenuStarterAdapter.
                  @Override
                  public void onClick(View v) {
 
-                     AlertDialog.Builder alertDialog = new AlertDialog.Builder(mContext);
+                     final AlertDialog.Builder alertDialog = new AlertDialog.Builder(mContext);
                      LayoutInflater mInflater2 = LayoutInflater.from(mContext);
                      @SuppressLint("InflateParams") final View customLayout = mInflater2.inflate(R.layout.dish_info_layout, null);
+
+                     //MOVER SI NO FUNCIONA
+                     alertDialog.setView(customLayout);
+                     final AlertDialog alert= alertDialog.create();
 
                      TextView dishName = customLayout.findViewById(R.id.textViewAlertDialogDishName);
                      dishName.setText(mData.get(getAdapterPosition()).getName());
@@ -97,7 +100,7 @@ public class MenuStarterAdapter extends RecyclerView.Adapter<MenuStarterAdapter.
                              mData.get(getAdapterPosition()).minusDishStock();
 
                              dishStock.setText(Integer.toString(mData.get(getAdapterPosition()).getQuantityStock()));
-                             UpdateDishAsyncTask updateDishAsyncTask = new UpdateDishAsyncTask(mData.get(getAdapterPosition()));
+                             UpdateDishAsyncTask updateDishAsyncTask = new UpdateDishAsyncTask(mData.get(getAdapterPosition()),1);
                              updateDishAsyncTask.execute();
 
                          }
@@ -111,23 +114,28 @@ public class MenuStarterAdapter extends RecyclerView.Adapter<MenuStarterAdapter.
                              mData.get(getAdapterPosition()).addDishStock();
 
                              dishStock.setText(Integer.toString(mData.get(getAdapterPosition()).getQuantityStock()));
-                             UpdateDishAsyncTask updateDishAsyncTask = new UpdateDishAsyncTask(mData.get(getAdapterPosition()));
+                             UpdateDishAsyncTask updateDishAsyncTask = new UpdateDishAsyncTask(mData.get(getAdapterPosition()),1);
                              updateDishAsyncTask.execute();
 
                          }
                      });
 
-                     alertDialog.setView(customLayout);
-                     alertDialog.create();
-                     alertDialog.show();
+                     Button btnDelete = customLayout.findViewById(R.id.btnDeleteDish);
+                     btnDelete.setOnClickListener(new View.OnClickListener() {
+                         @Override
+                         public void onClick(View v) {
+
+                             UpdateDishAsyncTask updateDishAsyncTask = new UpdateDishAsyncTask(mData.get(getAdapterPosition()),2);
+                             updateDishAsyncTask.execute();
+                             alert.cancel();
+
+
+                         }
+                     });
+
+                     alert.show();
                  }
              });
-         }
-
-         private Image getDishImage() {
-
-             Image dishImage = null;
-             return dishImage;
          }
 
          @SuppressLint("StaticFieldLeak")
@@ -138,12 +146,14 @@ public class MenuStarterAdapter extends RecyclerView.Adapter<MenuStarterAdapter.
              DataInputStream dis;
              DataOutputStream dos;
              ObjectInputStream ois;
-             Dish dish;
-             //ProgressDialog dialog;
 
-             UpdateDishAsyncTask(Dish dish) {
+             Dish dish;
+             int option;
+
+             public UpdateDishAsyncTask(Dish dish, int option) {
 
                  this.dish = dish;
+                 this.option = option;
              }
 
              @Override
@@ -179,12 +189,19 @@ public class MenuStarterAdapter extends RecyclerView.Adapter<MenuStarterAdapter.
 
                      publicKey = (PublicKey) ois.readObject();
 
-                     dos.writeInt(4);
+                     if(option == 1) {
+                         dos.writeInt(4);
+                         dos.writeInt(mData.get(getAdapterPosition()).getIdItemDish());
+                         dos.writeInt(mData.get(getAdapterPosition()).getQuantityStock());
 
-                     dos.writeInt(mData.get(getAdapterPosition()).getIdItemDish());
-                     dos.writeInt(mData.get(getAdapterPosition()).getQuantityStock());
+                         System.out.println(mData.get(getAdapterPosition()).getIdItemDish());
+                     }
+                     if(option == 2){
+                         dos.writeInt(5);
+                         dos.writeInt(mData.get(getAdapterPosition()).getIdItemDish());
 
-                     System.out.println(mData.get(getAdapterPosition()).getIdItemDish());
+                         System.out.println("Elimino cosas");
+                     }
 
                      sk.close();
                      dis.close();
