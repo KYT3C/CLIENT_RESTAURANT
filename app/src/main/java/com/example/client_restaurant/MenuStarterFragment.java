@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -94,11 +95,21 @@ public class MenuStarterFragment extends Fragment {
 
         View v = inflater.inflate(R.layout.fragment_menu_starter, container, false);
         recyclerViewDish = v.findViewById(R.id.recyclerview_menu_starter_id);
+        FloatingActionButton fab = v.findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                GetDishAsyncTask getDishAsyncTask = new GetDishAsyncTask(2);
+                getDishAsyncTask.execute();
+                GetDishAsyncTask getDishAsyncTask2 = new GetDishAsyncTask(1);
+                getDishAsyncTask2.execute();
+            }
+        });
         //MenuStarterAdapter recyclerViewAdapterDish = new MenuStarterAdapter(getContext(),dishList);
         //recyclerViewDish.setLayoutManager(new GridLayoutManager(getContext(),3));
         //recyclerViewDish.setAdapter(recyclerViewAdapterDish);
 
-        GetDishAsyncTask getDishAsyncTask = new GetDishAsyncTask();
+        GetDishAsyncTask getDishAsyncTask = new GetDishAsyncTask(1);
         getDishAsyncTask.execute();
 
         return v;
@@ -147,6 +158,11 @@ public class MenuStarterFragment extends Fragment {
         ObjectInputStream ois;
         PublicKey publicKey;
         List<Dish> dishList2 = new ArrayList<Dish>();
+        int option;
+
+        public GetDishAsyncTask(int option) {
+            this.option = option;
+        }
         //ProgressDialog dialog;
 
         @Override
@@ -165,8 +181,8 @@ public class MenuStarterFragment extends Fragment {
             super.onPostExecute(s);
             //dialog.dismiss();
             dishList = dishList2;
-            recyclerViewAdapterDish = new MenuStarterAdapter(getContext(),dishList);
-            recyclerViewDish.setLayoutManager(new GridLayoutManager(getContext(),3));
+            recyclerViewAdapterDish = new MenuStarterAdapter(getContext(), dishList);
+            recyclerViewDish.setLayoutManager(new GridLayoutManager(getContext(), 3));
             recyclerViewDish.setAdapter(recyclerViewAdapterDish);
 
         }
@@ -185,32 +201,46 @@ public class MenuStarterFragment extends Fragment {
 
                 publicKey = (PublicKey) ois.readObject();
 
-                dos.writeInt(2);
+                if (option == 1) {
+                    dos.writeInt(2);
 
-                int size = dis.readInt();
-                System.out.println("TAMAÑO LISTA : " + size);
+                    int size = dis.readInt();
+                    System.out.println("TAMAÑO LISTA : " + size);
 
-                for (int i = 0; i < size; i++) {
+                    for (int i = 0; i < size; i++) {
 
-                    String dishName = dis.readUTF();
-                    int idItemDish = dis.readInt();
-                    float price = dis.readFloat();
-                    int quantityStock = dis.readInt();
-                    int statusDish = dis.readInt();
-                    String descriptionDish = dis.readUTF();
-                    String dniKitchen = dis.readUTF();
+                        String dishName = dis.readUTF();
+                        int idItemDish = dis.readInt();
+                        float price = dis.readFloat();
+                        int quantityStock = dis.readInt();
+                        int statusDish = dis.readInt();
+                        String descriptionDish = dis.readUTF();
+                        String dniKitchen = dis.readUTF();
 
-                    System.out.println("NOMBRE DEL PLATO: " + dishName);
+                        System.out.println("NOMBRE DEL PLATO: " + dishName);
 
-                    dishList2.add(new Dish(dishName,idItemDish,price,quantityStock,statusDish,descriptionDish,dniKitchen));
-                    System.out.println("TAMAÑO LISTA BUCLE: " + dishList2.size());
+                        dishList2.add(new Dish(dishName, idItemDish, price, quantityStock, statusDish, descriptionDish, dniKitchen));
+                        System.out.println("TAMAÑO LISTA BUCLE: " + dishList2.size());
+                    }
                 }
+                if(option == 2){
 
+                    dos.writeInt(6);
+                    dos.writeUTF("Prueba Insert");
+
+                    dos.writeFloat(50.34f);
+                    dos.writeInt(30);
+
+                    dos.writeUTF("Prueba description insert");
+                    dos.writeUTF("43721530G");
+
+                }
             } catch (IOException ex) {
                 ex.printStackTrace();
             } catch (ClassNotFoundException e) {
                 e.printStackTrace();
             }
+
 
             return null;
 

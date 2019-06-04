@@ -13,4 +13,6 @@
     <string name="alert_dialog_dish_minus">-</string>
     <string name="id_ticket">ID Ticket:</string>
     <string name="preu_ticket">Preu Ticket:</string>
+    <string name="dish_name">Dish Name</string>
+    <string name="delete">DELETE</string>
 </resources>

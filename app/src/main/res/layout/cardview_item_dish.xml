@@ -21,7 +21,7 @@
             android:id="@+id/dish_name_id"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:text="Dish Name"
+            android:text="@string/dish_name"
             android:textSize="13sp"
             android:gravity="center"/>
     </LinearLayout>
