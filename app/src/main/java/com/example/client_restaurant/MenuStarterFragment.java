@@ -6,8 +6,10 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -43,6 +45,7 @@ public class MenuStarterFragment extends Fragment {
     List<Dish> dishList = new ArrayList<>();
     TextView name,price,stock,dniKitchen,description;
     EditText editTextName,editTextPrice,editTextStock,editTextDniKitchen,editTextDescription;
+    SwipeRefreshLayout swipeRefreshLayout;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -94,6 +97,8 @@ public class MenuStarterFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_menu_starter, container, false);
         recyclerViewDish = v.findViewById(R.id.recyclerview_menu_starter_id);
 
+        swipeRefreshLayout = v.findViewById(R.id.refreshDish);
+
         FloatingActionButton fab = v.findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -131,16 +136,25 @@ public class MenuStarterFragment extends Fragment {
 
                         GetDishAsyncTask getDishAsyncTask = new GetDishAsyncTask(2);
                         getDishAsyncTask.execute();
+
                         alert.cancel();
+
+                        GetDishAsyncTask getDishAsyncTask2 = new GetDishAsyncTask(1);
+                        getDishAsyncTask2.execute();
                     }
                 });
 
                 alert.show();
             }
         });
-        //MenuStarterAdapter recyclerViewAdapterDish = new MenuStarterAdapter(getContext(),dishList);
-        //recyclerViewDish.setLayoutManager(new GridLayoutManager(getContext(),3));
-        //recyclerViewDish.setAdapter(recyclerViewAdapterDish);
+
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                GetDishAsyncTask getDishAsyncTask = new GetDishAsyncTask(1);
+                getDishAsyncTask.execute();
+            }
+        });
 
         GetDishAsyncTask getDishAsyncTask = new GetDishAsyncTask(1);
         getDishAsyncTask.execute();
@@ -217,11 +231,7 @@ public class MenuStarterFragment extends Fragment {
                 recyclerViewAdapterDish = new MenuStarterAdapter(getContext(), dishList);
                 recyclerViewDish.setLayoutManager(new GridLayoutManager(getContext(), 3));
                 recyclerViewDish.setAdapter(recyclerViewAdapterDish);
-
-            if (option == 2){
-                GetDishAsyncTask getDishAsyncTask2 = new GetDishAsyncTask(1);
-                getDishAsyncTask2.execute();
-            }
+                swipeRefreshLayout.setRefreshing(false);
 
         }
 
