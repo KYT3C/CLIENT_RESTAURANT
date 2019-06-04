@@ -31,8 +31,6 @@ public class HomePageActivity extends AppCompatActivity {
         mData = new ArrayList<>();
 
 
-       data = getIntent().getExtras().getString("dni");
-
         recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
