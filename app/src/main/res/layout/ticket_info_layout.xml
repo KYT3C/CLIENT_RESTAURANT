@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:paddingLeft="20dp"
+    android:paddingRight="20dp"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:id="@+id/textViewAlertDialogTicketInfo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Lorem ipsum dolor sit amet consectetur adipiscing elit aliquam, ornare iaculis aliquet penatibus placerat ante auctor. Ornare vestibulum nullam egestas ridiculus luctus natoque fermentum sodales potenti risus, tortor felis dui sollicitudin lobortis porta sociis vehicula. Turpis dictum luctus scelerisque nibh pharetra lacus taciti class accumsan donec libero blandit, semper platea inceptos elementum fringilla eros lectus consequat porta lobortis nostra.
+
+Tincidunt eros mi nullam leo consequat viverra ac, phasellus pretium nibh ornare aptent. Cursus vel facilisis egestas dis odio pellentesque turpis, class cum elementum imperdiet nisl iaculis, varius vulputate maecenas habitasse porttitor metus. Commodo et tempus magnis mus cursus eleifend est morbi penatibus, sed taciti nullam scelerisque in orci etiam aliquam, vel accumsan curabitur phasellus senectus augue semper sociis."
+            android:textAlignment="center" />
+
+    </ScrollView>
+
+
+</LinearLayout>
