@@ -46,7 +46,7 @@ public class TicketAdapter extends RecyclerView.Adapter<TicketAdapter.StarterVie
     @SuppressLint("SetTextI18n")
     @Override
     public void onBindViewHolder(@NonNull StarterViewHolder starterViewHolder, int i) {
-        starterViewHolder.textViewIdValue.setText(Integer.toString(mData.get(i).getIdTicket()));
+        starterViewHolder.textViewIDValue.setText(""+Integer.toString(mData.get(i).getIdTicket()));
         starterViewHolder.textViewPriceTicket.setText("Precio : " + Float.toString(mData.get(i).getTotalPrice()));
     }
 
@@ -57,16 +57,14 @@ public class TicketAdapter extends RecyclerView.Adapter<TicketAdapter.StarterVie
 
     public class StarterViewHolder extends RecyclerView.ViewHolder{
 
-        TextView textViewIDTable;
+        TextView textViewIDValue;
         TextView textViewPriceTicket;
-        TextView textViewIdValue;
 
         public StarterViewHolder(@NonNull View itemView) {
             super(itemView);
 
-            textViewIDTable = itemView.findViewById(R.id.ticket_id);
+            textViewIDValue = itemView.findViewById(R.id.ticket_id);
             textViewPriceTicket = itemView.findViewById(R.id.ticket_precio);
-            textViewIdValue = itemView.findViewById(R.id.textViewIdValue);
 
             itemView.setOnClickListener(new View.OnClickListener(){
 
@@ -77,6 +75,8 @@ public class TicketAdapter extends RecyclerView.Adapter<TicketAdapter.StarterVie
                     @SuppressLint("InflateParams") final View customLayout = mInflater2.inflate(R.layout.ticket_info_layout, null);
                     TextView ticketInfo = customLayout.findViewById(R.id.textViewAlertDialogTicketInfo);
                     try {
+                        System.out.println(mData.get(getAdapterPosition()).getIdTicket());
+
                         Connection connection = new Connection();
                         String ip = connection.getIp();
                         Socket sk = new Socket(ip, 20002);
