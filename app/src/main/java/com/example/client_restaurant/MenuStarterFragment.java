@@ -1,34 +1,32 @@
 package com.example.client_restaurant;
 
 import android.annotation.SuppressLint;
-import android.app.ProgressDialog;
+import android.app.AlertDialog;
 import android.content.Context;
-import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ProgressBar;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.net.Socket;
-import java.security.InvalidKeyException;
 import java.security.PublicKey;
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.crypto.BadPaddingException;
-import javax.crypto.Cipher;
-import javax.crypto.IllegalBlockSizeException;
 
 
 /**
@@ -45,6 +43,9 @@ public class MenuStarterFragment extends Fragment {
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
     List<Dish> dishList = new ArrayList<>();
+    TextView name,price,stock,dniKitchen,description;
+    EditText editTextName,editTextPrice,editTextStock,editTextDniKitchen,editTextDescription;
+    SwipeRefreshLayout swipeRefreshLayout;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -95,19 +96,65 @@ public class MenuStarterFragment extends Fragment {
 
         View v = inflater.inflate(R.layout.fragment_menu_starter, container, false);
         recyclerViewDish = v.findViewById(R.id.recyclerview_menu_starter_id);
+
+        swipeRefreshLayout = v.findViewById(R.id.refreshDish);
+
         FloatingActionButton fab = v.findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                GetDishAsyncTask getDishAsyncTask = new GetDishAsyncTask(2);
-                getDishAsyncTask.execute();
-                GetDishAsyncTask getDishAsyncTask2 = new GetDishAsyncTask(1);
-                getDishAsyncTask2.execute();
+
+                AlertDialog.Builder alertDialog = new AlertDialog.Builder(getContext());
+                LayoutInflater mInflater2 = LayoutInflater.from(getContext());
+                View customLayout = mInflater2.inflate(R.layout.dish_add_layout, null);
+
+                //MOVER SI NO FUNCIONA
+                alertDialog.setView(customLayout);
+                final AlertDialog alert= alertDialog.create();
+
+                //AQUI CODIGO QUE FALTA
+
+                name = customLayout.findViewById(R.id.textViewLabelNameDish);
+                editTextName = customLayout.findViewById(R.id.editTextDishName);
+
+                price = customLayout.findViewById(R.id.textViewLabelDishPrice);
+                editTextPrice = customLayout.findViewById(R.id.editTextDishPrice);
+
+                stock = customLayout.findViewById(R.id.textViewLabelDishQuantityStock);
+                editTextStock = customLayout.findViewById(R.id.editTextDishStock);
+
+                dniKitchen = customLayout.findViewById(R.id.textViewLabelDishDniKitchen);
+                editTextDniKitchen = customLayout.findViewById(R.id.editTextDishDniKitchen);
+
+                description = customLayout.findViewById(R.id.textViewLabelDishDescription);
+                editTextDescription = customLayout.findViewById(R.id.editTextDishDescription);
+
+                Button btnInsert = customLayout.findViewById(R.id.btnInsertDish);
+                btnInsert.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        GetDishAsyncTask getDishAsyncTask = new GetDishAsyncTask(2);
+                        getDishAsyncTask.execute();
+
+                        alert.cancel();
+
+                        GetDishAsyncTask getDishAsyncTask2 = new GetDishAsyncTask(1);
+                        getDishAsyncTask2.execute();
+                    }
+                });
+
+                alert.show();
             }
         });
-        //MenuStarterAdapter recyclerViewAdapterDish = new MenuStarterAdapter(getContext(),dishList);
-        //recyclerViewDish.setLayoutManager(new GridLayoutManager(getContext(),3));
-        //recyclerViewDish.setAdapter(recyclerViewAdapterDish);
+
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                GetDishAsyncTask getDishAsyncTask = new GetDishAsyncTask(1);
+                getDishAsyncTask.execute();
+            }
+        });
 
         GetDishAsyncTask getDishAsyncTask = new GetDishAsyncTask(1);
         getDishAsyncTask.execute();
@@ -179,11 +226,12 @@ public class MenuStarterFragment extends Fragment {
         @Override
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
-            //dialog.dismiss();
-            dishList = dishList2;
-            recyclerViewAdapterDish = new MenuStarterAdapter(getContext(), dishList);
-            recyclerViewDish.setLayoutManager(new GridLayoutManager(getContext(), 3));
-            recyclerViewDish.setAdapter(recyclerViewAdapterDish);
+
+                dishList = dishList2;
+                recyclerViewAdapterDish = new MenuStarterAdapter(getContext(), dishList);
+                recyclerViewDish.setLayoutManager(new GridLayoutManager(getContext(), 3));
+                recyclerViewDish.setAdapter(recyclerViewAdapterDish);
+                swipeRefreshLayout.setRefreshing(false);
 
         }
 
@@ -225,14 +273,18 @@ public class MenuStarterFragment extends Fragment {
                 }
                 if(option == 2){
 
-                    dos.writeInt(6);
-                    dos.writeUTF("Prueba Insert");
+                            try {
 
-                    dos.writeFloat(50.34f);
-                    dos.writeInt(30);
+                                dos.writeInt(6);
+                                dos.writeUTF(editTextName.getText().toString());
+                                dos.writeFloat(Float.parseFloat(editTextPrice.getText().toString()));
+                                dos.writeInt(Integer.parseInt(editTextStock.getText().toString()));
+                                dos.writeUTF(editTextDescription.getText().toString());
+                                dos.writeUTF(editTextDniKitchen.getText().toString());
 
-                    dos.writeUTF("Prueba description insert");
-                    dos.writeUTF("43721530G");
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
 
                 }
             } catch (IOException ex) {
