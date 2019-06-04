@@ -26,12 +26,15 @@ public class ProfileFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+    private String data;
+    private String dni;
 
     private OnFragmentInteractionListener mListener;
 
     public ProfileFragment() {
         // Required empty public constructor
     }
+
 
     /**
      * Use this factory method to create a new instance of
@@ -57,6 +60,8 @@ public class ProfileFragment extends Fragment {
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
+
+
         }
     }
 
@@ -64,7 +69,13 @@ public class ProfileFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_profile, container, false);
+        dni = TempUser.Singleton().getDni();
+
+        View v = inflater.inflate(R.layout.fragment_profile, container, false);
+
+
+
+        return v;
     }
 
     // TODO: Rename method, update argument and hook method into UI event
