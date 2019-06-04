@@ -8,14 +8,12 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
 
-import org.w3c.dom.Text;
+import android.widget.TextView;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
-import java.io.IOException;
+
 import java.io.ObjectInputStream;
 import java.net.Socket;
 import java.security.PublicKey;
@@ -26,6 +24,7 @@ public class TicketAdapter extends RecyclerView.Adapter<TicketAdapter.StarterVie
 
     private Context mContext;
     private List<Ticket> mData;
+
 
     public TicketAdapter(Context mContext, List<Ticket> mData) {
         this.mContext = mContext;
@@ -67,6 +66,7 @@ public class TicketAdapter extends RecyclerView.Adapter<TicketAdapter.StarterVie
 
             textViewIDTable = itemView.findViewById(R.id.ticket_id);
             textViewPriceTicket = itemView.findViewById(R.id.ticket_precio);
+            textViewIdValue = itemView.findViewById(R.id.textViewIdValue);
 
             itemView.setOnClickListener(new View.OnClickListener(){
 
@@ -76,11 +76,10 @@ public class TicketAdapter extends RecyclerView.Adapter<TicketAdapter.StarterVie
                     LayoutInflater mInflater2 = LayoutInflater.from(mContext);
                     @SuppressLint("InflateParams") final View customLayout = mInflater2.inflate(R.layout.ticket_info_layout, null);
                     TextView ticketInfo = customLayout.findViewById(R.id.textViewAlertDialogTicketInfo);
-                    Connection connection = new Connection();
-                    String ip = connection.getIp();
-                    Socket sk = null;
                     try {
-                        sk = new Socket(ip, 20002);
+                        Connection connection = new Connection();
+                        String ip = connection.getIp();
+                        Socket sk = new Socket(ip, 20002);
                         System.out.println("Establecida la conexión con " + ip);
                         DataInputStream dis = new DataInputStream(sk.getInputStream());
                         DataOutputStream dos = new DataOutputStream(sk.getOutputStream());

@@ -6,7 +6,6 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -18,7 +17,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -43,8 +41,8 @@ public class MenuStarterFragment extends Fragment {
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
     List<Dish> dishList = new ArrayList<>();
-    TextView name,price,stock,dniKitchen,description;
-    EditText editTextName,editTextPrice,editTextStock,editTextDniKitchen,editTextDescription;
+    TextView name, price, stock, dniKitchen, description;
+    EditText editTextName, editTextPrice, editTextStock, editTextDniKitchen, editTextDescription;
     SwipeRefreshLayout swipeRefreshLayout;
 
     // TODO: Rename and change types of parameters
@@ -85,14 +83,12 @@ public class MenuStarterFragment extends Fragment {
 
     }
 
-
     MenuStarterAdapter recyclerViewAdapterDish;
     RecyclerView recyclerViewDish;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
 
         View v = inflater.inflate(R.layout.fragment_menu_starter, container, false);
         recyclerViewDish = v.findViewById(R.id.recyclerview_menu_starter_id);
@@ -108,11 +104,8 @@ public class MenuStarterFragment extends Fragment {
                 LayoutInflater mInflater2 = LayoutInflater.from(getContext());
                 View customLayout = mInflater2.inflate(R.layout.dish_add_layout, null);
 
-                //MOVER SI NO FUNCIONA
                 alertDialog.setView(customLayout);
-                final AlertDialog alert= alertDialog.create();
-
-                //AQUI CODIGO QUE FALTA
+                final AlertDialog alert = alertDialog.create();
 
                 name = customLayout.findViewById(R.id.textViewLabelNameDish);
                 editTextName = customLayout.findViewById(R.id.editTextDishName);
@@ -162,7 +155,7 @@ public class MenuStarterFragment extends Fragment {
         return v;
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
+
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {
             mListener.onFragmentInteraction(uri);
@@ -207,31 +200,24 @@ public class MenuStarterFragment extends Fragment {
         List<Dish> dishList2 = new ArrayList<Dish>();
         int option;
 
-        public GetDishAsyncTask(int option) {
+        private GetDishAsyncTask(int option) {
             this.option = option;
         }
-        //ProgressDialog dialog;
 
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            /*dialog = new ProgressDialog(getContext());
-            dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-            dialog.setMessage("Cargando. porfavor espere...");
-            dialog.setIndeterminate(true);
-            dialog.setCanceledOnTouchOutside(false);
-            dialog.show();*/
         }
 
         @Override
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
 
-                dishList = dishList2;
-                recyclerViewAdapterDish = new MenuStarterAdapter(getContext(), dishList);
-                recyclerViewDish.setLayoutManager(new GridLayoutManager(getContext(), 3));
-                recyclerViewDish.setAdapter(recyclerViewAdapterDish);
-                swipeRefreshLayout.setRefreshing(false);
+            dishList = dishList2;
+            recyclerViewAdapterDish = new MenuStarterAdapter(getContext(), dishList);
+            recyclerViewDish.setLayoutManager(new GridLayoutManager(getContext(), 3));
+            recyclerViewDish.setAdapter(recyclerViewAdapterDish);
+            swipeRefreshLayout.setRefreshing(false);
 
         }
 
@@ -271,20 +257,20 @@ public class MenuStarterFragment extends Fragment {
                         System.out.println("TAMAÑO LISTA BUCLE: " + dishList2.size());
                     }
                 }
-                if(option == 2){
+                if (option == 2) {
 
-                            try {
+                    try {
 
-                                dos.writeInt(6);
-                                dos.writeUTF(editTextName.getText().toString());
-                                dos.writeFloat(Float.parseFloat(editTextPrice.getText().toString()));
-                                dos.writeInt(Integer.parseInt(editTextStock.getText().toString()));
-                                dos.writeUTF(editTextDescription.getText().toString());
-                                dos.writeUTF(editTextDniKitchen.getText().toString());
+                        dos.writeInt(6);
+                        dos.writeUTF(editTextName.getText().toString());
+                        dos.writeFloat(Float.parseFloat(editTextPrice.getText().toString()));
+                        dos.writeInt(Integer.parseInt(editTextStock.getText().toString()));
+                        dos.writeUTF(editTextDescription.getText().toString());
+                        dos.writeUTF(editTextDniKitchen.getText().toString());
 
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
 
                 }
             } catch (IOException ex) {
@@ -292,8 +278,6 @@ public class MenuStarterFragment extends Fragment {
             } catch (ClassNotFoundException e) {
                 e.printStackTrace();
             }
-
-
             return null;
 
         }
