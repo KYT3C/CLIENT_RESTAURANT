@@ -23,9 +23,16 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.net.Socket;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 import java.security.PublicKey;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.crypto.BadPaddingException;
+import javax.crypto.Cipher;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 
 public class UsersFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
@@ -36,6 +43,7 @@ public class UsersFragment extends Fragment {
 
     TextView dni, sname, apellidos, telefono, pass;
     int kind;
+    private static Cipher rsa;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -253,7 +261,7 @@ public class UsersFragment extends Fragment {
                     dos.writeUTF(sname.getText().toString());
                     dos.writeUTF(apellidos.getText().toString());
                     dos.writeUTF(telefono.getText().toString());
-                    dos.writeUTF(pass.getText().toString());
+                    sendEncrypted(pass.getText().toString());
                     dos.writeInt(kind);
                 }
 
@@ -266,6 +274,30 @@ public class UsersFragment extends Fragment {
 
             return null;
 
+        }
+
+        private void sendEncrypted(String message) {
+
+            try {
+                rsa = Cipher.getInstance("RSA/ECB/PKCS1Padding");
+                rsa.init(Cipher.ENCRYPT_MODE, publicKey);
+                byte[] encriptado = rsa.doFinal(message.getBytes());
+                dos.writeInt(encriptado.length);
+                dos.write(encriptado);
+
+            } catch (NoSuchAlgorithmException e) {
+                e.printStackTrace();
+            } catch (NoSuchPaddingException e) {
+                e.printStackTrace();
+            } catch (BadPaddingException e) {
+                e.printStackTrace();
+            } catch (IllegalBlockSizeException e) {
+                e.printStackTrace();
+            } catch (InvalidKeyException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
 
     }
