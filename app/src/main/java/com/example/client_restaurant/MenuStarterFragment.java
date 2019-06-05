@@ -122,7 +122,7 @@ public class MenuStarterFragment extends Fragment {
                 description = customLayout.findViewById(R.id.textViewLabelDishDescription);
                 editTextDescription = customLayout.findViewById(R.id.editTextDishDescription);
 
-                Button btnInsert = customLayout.findViewById(R.id.btnInsertDish);
+                Button btnInsert = customLayout.findViewById(R.id.btnInsert);
                 btnInsert.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
