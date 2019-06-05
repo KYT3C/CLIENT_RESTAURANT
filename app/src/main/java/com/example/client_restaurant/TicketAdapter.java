@@ -26,11 +26,13 @@ public class TicketAdapter extends RecyclerView.Adapter<TicketAdapter.StarterVie
 
     private Context mContext;
     private List<Ticket> mData;
+    private String ticketInfo;
 
 
     public TicketAdapter(Context mContext, List<Ticket> mData) {
         this.mContext = mContext;
         this.mData = mData;
+
     }
 
     @NonNull
@@ -75,23 +77,22 @@ public class TicketAdapter extends RecyclerView.Adapter<TicketAdapter.StarterVie
                     SetIdAsyncTask setIdAsyncTask = new SetIdAsyncTask(mData.get(getAdapterPosition()).getIdTicket());
                     setIdAsyncTask.execute();
 
-                    AlertDialog.Builder alertDialog = new AlertDialog.Builder(mContext);
+                    final AlertDialog.Builder alertDialog = new AlertDialog.Builder(mContext);
                     LayoutInflater mInflater2 = LayoutInflater.from(mContext);
                     @SuppressLint("InflateParams") final View customLayout = mInflater2.inflate(R.layout.ticket_info_layout, null);
+
+                    alertDialog.setView(customLayout);
+                    final AlertDialog alert= alertDialog.create();
+
+
                     TextView ticketInfo = customLayout.findViewById(R.id.textViewAlertDialogTicketInfo);
-
-                        System.out.println(mData.get(getAdapterPosition()).getIdTicket());
-
-
-
-
-
-
-
-
+                    ticketInfo.setText(ticketInfo.getText());
+                    alert.show();
                 }
             });
         }
+
+
         @SuppressLint("StaticFieldLeak")
         class SetIdAsyncTask extends AsyncTask<String, Void, String> {
 
@@ -102,22 +103,29 @@ public class TicketAdapter extends RecyclerView.Adapter<TicketAdapter.StarterVie
             ObjectInputStream ois;
             int idTicket;
 
+            private String devolverTicket;
+
 
 
             @Override
             protected void onPreExecute() {
                 super.onPreExecute();
             }
+
             public SetIdAsyncTask(int idTicket) {
 
                 this.idTicket = idTicket;
+
+
 
             }
 
             @Override
             protected void onPostExecute(String s) {
                 super.onPostExecute(s);
-                //dialog.dismiss();
+
+
+
             }
 
             @Override
@@ -134,7 +142,8 @@ public class TicketAdapter extends RecyclerView.Adapter<TicketAdapter.StarterVie
                     publicKey = (PublicKey) ois.readObject();
                     dos.writeInt(7);
                     dos.writeInt(idTicket);
-                    //dis.readUTF();
+                    devolverTicket = dis.readUTF();
+
 
                     sk.close();
                     dis.close();
@@ -152,3 +161,4 @@ public class TicketAdapter extends RecyclerView.Adapter<TicketAdapter.StarterVie
         }
     }
 }
+
