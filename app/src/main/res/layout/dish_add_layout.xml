@@ -126,7 +126,7 @@
         app:layout_constraintTop_toBottomOf="@+id/editTextDishDniKitchen" />
 
     <Button
-        android:id="@+id/btnInsertDish"
+        android:id="@+id/btnInsert"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"

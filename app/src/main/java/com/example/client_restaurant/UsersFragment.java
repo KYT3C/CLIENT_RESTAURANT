@@ -1,16 +1,22 @@
 package com.example.client_restaurant;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.content.Context;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.RadioGroup;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -27,6 +33,9 @@ public class UsersFragment extends Fragment {
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
     List<Users> ticketList = new ArrayList<>();
+
+    TextView dni, sname, apellidos, telefono, pass;
+    int kind;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -81,8 +90,63 @@ public class UsersFragment extends Fragment {
         recyclerViewTickets.setLayoutManager(new GridLayoutManager(getContext(),3));
         recyclerViewTickets.setAdapter(recyclerViewAdapterDish);
 
-        UsersFragment.GetTicketAsyncTask getDishAsyncTask = new GetTicketAsyncTask();
+        UsersFragment.GetTicketAsyncTask getDishAsyncTask = new GetTicketAsyncTask(1);
         getDishAsyncTask.execute();
+
+        FloatingActionButton fab = v.findViewById(R.id.fab3);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog.Builder alertDialog = new AlertDialog.Builder(getContext());
+                LayoutInflater mInflater2 = LayoutInflater.from(getContext());
+                View customLayout = mInflater2.inflate(R.layout.user_add_layout, null);
+
+                alertDialog.setView(customLayout);
+
+                final AlertDialog aaaa = alertDialog.create();
+
+                dni = customLayout.findViewById(R.id.editTextDishName);
+                sname = customLayout.findViewById(R.id.editTextDishPrice);
+                apellidos = customLayout.findViewById(R.id.editTextDishStock);
+                telefono = customLayout.findViewById(R.id.editTextDishDniKitchen);
+                pass = customLayout.findViewById(R.id.editTextDishDescription);
+                RadioGroup selec = customLayout.findViewById(R.id.radioGroup);
+
+
+
+                if(selec == customLayout.findViewById(R.id.rbCamarero))
+                    kind = 3;
+                if(selec == customLayout.findViewById(R.id.rbCocinero))
+                    kind = 2;
+                if(selec == customLayout.findViewById(R.id.rbAdmin))
+                    kind = 4;
+
+                Button btn = customLayout.findViewById(R.id.btnInsert);
+
+                btn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if ((dni.getText().toString().isEmpty() || sname.getText().toString().isEmpty() || apellidos.getText().toString().isEmpty() ||
+                                telefono.getText().toString().isEmpty() || pass.getText().toString().isEmpty())) { }
+                        else {
+
+                            GetTicketAsyncTask getTat = new GetTicketAsyncTask(2);
+                            getTat.execute();
+
+                            aaaa.cancel();
+
+                            GetTicketAsyncTask getnewTat = new GetTicketAsyncTask(1);
+                            getnewTat.execute();
+                        }
+                    }
+                });
+
+                aaaa.show();
+            }
+
+
+        });
+
 
         return v;
     }
@@ -130,6 +194,7 @@ public class UsersFragment extends Fragment {
         ObjectInputStream ois;
         PublicKey publicKey;
         List<Users> ticketList2 = new ArrayList<Users>();
+        int option =1;
 
         @Override
         protected void onPreExecute() {
@@ -146,6 +211,10 @@ public class UsersFragment extends Fragment {
 
         }
 
+        private GetTicketAsyncTask(int option){
+            this.option = option;
+        }
+
         @Override
         protected String doInBackground(String... strings) {
 
@@ -159,21 +228,33 @@ public class UsersFragment extends Fragment {
                 ois = new ObjectInputStream(sk.getInputStream());
                 publicKey = (PublicKey) ois.readObject();
 
-                dos.writeInt(12);
+                if(option ==1) {
+                    dos.writeInt(12);
 
-                int size = dis.readInt();
-                System.out.println("TAMAÑO LISTA : " + size);
+                    int size = dis.readInt();
+                    System.out.println("TAMAÑO LISTA : " + size);
 
-                for (int i = 0; i < size; i++) {
+                    for (int i = 0; i < size; i++) {
 
-                    String dni =dis.readUTF();
-                    String firstName = dis.readUTF();
-                    String surnames = dis.readUTF();
-                    String phoneNumber = dis.readUTF();
-                    int kind = dis.readInt();
+                        String dni = dis.readUTF();
+                        String firstName = dis.readUTF();
+                        String surnames = dis.readUTF();
+                        String phoneNumber = dis.readUTF();
+                        int kind = dis.readInt();
 
-                    ticketList2.add(new Users(dni,firstName,surnames,phoneNumber, kind));
-                    System.out.println("TAMAÑO LISTA BUCLE: " + ticketList2.size());
+                        ticketList2.add(new Users(dni, firstName, surnames, phoneNumber, kind));
+                        System.out.println("TAMAÑO LISTA BUCLE: " + ticketList2.size());
+                    }
+                }
+                else if(option == 2){
+
+                    dos.writeInt(15);
+                    dos.writeUTF(dni.getText().toString());
+                    dos.writeUTF(sname.getText().toString());
+                    dos.writeUTF(apellidos.getText().toString());
+                    dos.writeUTF(telefono.getText().toString());
+                    dos.writeUTF(pass.getText().toString());
+                    dos.writeInt(kind);
                 }
 
             } catch (IOException ex) {
@@ -188,5 +269,7 @@ public class UsersFragment extends Fragment {
         }
 
     }
+
+
 }
 
