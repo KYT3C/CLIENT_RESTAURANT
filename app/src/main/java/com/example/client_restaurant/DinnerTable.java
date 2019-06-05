@@ -5,11 +5,13 @@ class DinnerTable {
     private int idTable;
     private String locationTable;
     private int numberDinnerTable;
+    private boolean occupied;
 
-    public DinnerTable(int idTable, String locationTable, int numberDinnerTable) {
+    public DinnerTable(int idTable, String locationTable, int numberDinnerTable, boolean occupied) {
         this.idTable = idTable;
         this.locationTable = locationTable;
         this.numberDinnerTable = numberDinnerTable;
+        this.occupied = occupied;
     }
 
     public int getIdTable() {
@@ -34,5 +36,13 @@ class DinnerTable {
 
     public void setNumberDinnerTable(int numberDinnerTable) {
         this.numberDinnerTable = numberDinnerTable;
+    }
+
+    public boolean isOccupied() {
+        return occupied;
+    }
+
+    public void setOccupied(boolean occupied) {
+        this.occupied = occupied;
     }
 }

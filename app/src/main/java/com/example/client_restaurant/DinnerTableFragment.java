@@ -169,8 +169,9 @@ public class DinnerTableFragment extends Fragment {
                     int idTable = dis.readInt();
                     String locationTable = dis.readUTF();
                     int numberDinnerTable = dis.readInt();
+                    boolean occupied = dis.readBoolean();
 
-                    ticketList2.add(new DinnerTable(idTable,locationTable,numberDinnerTable));
+                    ticketList2.add(new DinnerTable(idTable,locationTable,numberDinnerTable,occupied));
                     System.out.println("TAMAÑO LISTA BUCLE: " + ticketList2.size());
                 }
 
