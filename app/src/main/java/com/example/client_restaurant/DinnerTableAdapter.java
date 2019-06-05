@@ -22,10 +22,10 @@ public class DinnerTableAdapter extends RecyclerView.Adapter<DinnerTableAdapter.
 
 
     private Context mContext;
-    private List<Users> mData;
+    private List<DinnerTable> mData;
 
 
-    public DinnerTableAdapter(Context mContext, List<Users> mData) {
+    public DinnerTableAdapter(Context mContext, List<DinnerTable> mData) {
         this.mContext = mContext;
         this.mData = mData;
     }
@@ -36,7 +36,7 @@ public class DinnerTableAdapter extends RecyclerView.Adapter<DinnerTableAdapter.
 
         View view;
         LayoutInflater mInflater = LayoutInflater.from(mContext);
-        view = mInflater.inflate(R.layout.cardview_users, viewGroup ,false);
+        view = mInflater.inflate(R.layout.cardview_dinner_table, viewGroup ,false);
 
         return new StarterViewHolder(view);
 
@@ -45,8 +45,8 @@ public class DinnerTableAdapter extends RecyclerView.Adapter<DinnerTableAdapter.
     @SuppressLint("SetTextI18n")
     @Override
     public void onBindViewHolder(@NonNull StarterViewHolder starterViewHolder, int i) {
-        starterViewHolder.textViewIDValue.setText(mData.get(i).getFirstName());
-        starterViewHolder.textViewPriceTicket.setText(mData.get(i).getDni());
+        starterViewHolder.textViewIDValue.setText(Integer.toString(mData.get(i).getIdTable()));
+        starterViewHolder.textViewPriceTicket.setText(Integer.toString(mData.get(i).getNumberDinnerTable()));
     }
 
     @Override
@@ -65,29 +65,6 @@ public class DinnerTableAdapter extends RecyclerView.Adapter<DinnerTableAdapter.
             textViewIDValue = itemView.findViewById(R.id.ticket_id);
             textViewPriceTicket = itemView.findViewById(R.id.ticket_precio);
 
-            itemView.setOnClickListener(new View.OnClickListener(){
-
-                @Override
-                public void onClick(View v) {
-                    SetIdAsyncTask setIdAsyncTask = new SetIdAsyncTask();
-                    setIdAsyncTask.execute();
-
-                    AlertDialog.Builder alertDialog = new AlertDialog.Builder(mContext);
-                    LayoutInflater mInflater2 = LayoutInflater.from(mContext);
-                    @SuppressLint("InflateParams") final View customLayout = mInflater2.inflate(R.layout.ticket_info_layout, null);
-                    TextView ticketInfo = customLayout.findViewById(R.id.textViewAlertDialogTicketInfo);
-
-                        System.out.println(mData.get(getAdapterPosition()).getDni());
-
-
-
-
-
-
-
-
-                }
-            });
         }
         @SuppressLint("StaticFieldLeak")
         class SetIdAsyncTask extends AsyncTask<String, Void, String> {

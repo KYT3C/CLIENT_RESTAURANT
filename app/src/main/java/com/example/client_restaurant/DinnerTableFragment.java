@@ -26,7 +26,7 @@ public class DinnerTableFragment extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
-    List<Users> ticketList = new ArrayList<>();
+    List<DinnerTable> dinnerTableList = new ArrayList<>();
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -67,7 +67,7 @@ public class DinnerTableFragment extends Fragment {
     }
 
 
-    UsersAdapter recyclerViewAdapterTickets;
+    DinnerTableAdapter recyclerViewAdapterTickets;
     RecyclerView recyclerViewTickets;
 
     @Override
@@ -75,9 +75,9 @@ public class DinnerTableFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
 
-        View v = inflater.inflate(R.layout.fragment_users, container, false);
-        recyclerViewTickets = v.findViewById(R.id.recyclerview_users);
-        UsersAdapter recyclerViewAdapterDish = new UsersAdapter(getContext(), ticketList);
+        View v = inflater.inflate(R.layout.fragment_dinner_table, container, false);
+        recyclerViewTickets = v.findViewById(R.id.recyclerview_dinner_table);
+        DinnerTableAdapter recyclerViewAdapterDish = new DinnerTableAdapter(getContext(), dinnerTableList);
         recyclerViewTickets.setLayoutManager(new GridLayoutManager(getContext(),3));
         recyclerViewTickets.setAdapter(recyclerViewAdapterDish);
 
@@ -129,7 +129,7 @@ public class DinnerTableFragment extends Fragment {
         DataOutputStream dos;
         ObjectInputStream ois;
         PublicKey publicKey;
-        List<Users> ticketList2 = new ArrayList<Users>();
+        List<DinnerTable> ticketList2 = new ArrayList<DinnerTable>();
 
         @Override
         protected void onPreExecute() {
@@ -139,8 +139,8 @@ public class DinnerTableFragment extends Fragment {
         @Override
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
-            ticketList = ticketList2;
-            recyclerViewAdapterTickets = new UsersAdapter(getContext(),ticketList);
+            dinnerTableList = ticketList2;
+            recyclerViewAdapterTickets = new DinnerTableAdapter(getContext(),dinnerTableList);
             recyclerViewTickets.setLayoutManager(new GridLayoutManager(getContext(),3));
             recyclerViewTickets.setAdapter(recyclerViewAdapterTickets);
 
@@ -159,20 +159,18 @@ public class DinnerTableFragment extends Fragment {
                 ois = new ObjectInputStream(sk.getInputStream());
                 publicKey = (PublicKey) ois.readObject();
 
-                dos.writeInt(12);
+                dos.writeInt(18);
 
                 int size = dis.readInt();
                 System.out.println("TAMAÑO LISTA : " + size);
 
                 for (int i = 0; i < size; i++) {
 
-                    String dni =dis.readUTF();
-                    String firstName = dis.readUTF();
-                    String surnames = dis.readUTF();
-                    String phoneNumber = dis.readUTF();
-                    int kind = dis.readInt();
+                    int idTable = dis.readInt();
+                    String locationTable = dis.readUTF();
+                    int numberDinnerTable = dis.readInt();
 
-                    ticketList2.add(new Users(dni,firstName,surnames,phoneNumber, kind));
+                    ticketList2.add(new DinnerTable(idTable,locationTable,numberDinnerTable));
                     System.out.println("TAMAÑO LISTA BUCLE: " + ticketList2.size());
                 }
 
