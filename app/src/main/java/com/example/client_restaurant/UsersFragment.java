@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.RadioGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -32,6 +33,9 @@ public class UsersFragment extends Fragment {
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
     List<Users> ticketList = new ArrayList<>();
+
+    TextView dni, sname, apellidos, telefono, pass;
+    int kind;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -101,14 +105,14 @@ public class UsersFragment extends Fragment {
 
                 final AlertDialog aaaa = alertDialog.create();
 
-                TextView dni = customLayout.findViewById(R.id.editTextDishName);
-                TextView name = customLayout.findViewById(R.id.editTextDishPrice);
-                TextView apellidos = customLayout.findViewById(R.id.editTextDishStock);
-                TextView telefono = customLayout.findViewById(R.id.editTextDishDniKitchen);
-                TextView pass = customLayout.findViewById(R.id.editTextDishDescription);
+                dni = customLayout.findViewById(R.id.editTextDishName);
+                sname = customLayout.findViewById(R.id.editTextDishPrice);
+                apellidos = customLayout.findViewById(R.id.editTextDishStock);
+                telefono = customLayout.findViewById(R.id.editTextDishDniKitchen);
+                pass = customLayout.findViewById(R.id.editTextDishDescription);
                 RadioGroup selec = customLayout.findViewById(R.id.radioGroup);
 
-                int kind=1;
+
 
                 if(selec == customLayout.findViewById(R.id.rbCamarero))
                     kind = 3;
@@ -122,7 +126,18 @@ public class UsersFragment extends Fragment {
                 btn.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        if ((dni.getText().toString().isEmpty() || sname.getText().toString().isEmpty() || apellidos.getText().toString().isEmpty() ||
+                                telefono.getText().toString().isEmpty() || pass.getText().toString().isEmpty())) { }
+                        else {
 
+                            GetTicketAsyncTask getTat = new GetTicketAsyncTask(2);
+                            getTat.execute();
+
+                            aaaa.cancel();
+
+                            GetTicketAsyncTask getnewTat = new GetTicketAsyncTask(1);
+                            getnewTat.execute();
+                        }
                     }
                 });
 
@@ -233,6 +248,13 @@ public class UsersFragment extends Fragment {
                 }
                 else if(option == 2){
 
+                    dos.writeInt(15);
+                    dos.writeUTF(dni.getText().toString());
+                    dos.writeUTF(sname.getText().toString());
+                    dos.writeUTF(apellidos.getText().toString());
+                    dos.writeUTF(telefono.getText().toString());
+                    dos.writeUTF(pass.getText().toString());
+                    dos.writeInt(kind);
                 }
 
             } catch (IOException ex) {
