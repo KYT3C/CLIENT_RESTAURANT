@@ -58,6 +58,7 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.MenuViewHolder
         Fragment settingsFragment = new SettingsFragment();
         Fragment ticketFragment = new TicketFragment();
         Fragment profileFragment = new ProfileFragment();
+        Fragment usersFragment = new UsersFragment();
 
         Bundle args = new Bundle();
 
@@ -103,7 +104,7 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.MenuViewHolder
                    }
                    if (getAdapterPosition() == 5) {
                        AppCompatActivity activity = (AppCompatActivity) itemView.getContext();
-                       activity.getSupportFragmentManager().beginTransaction().replace(R.id.container, settingsFragment).addToBackStack(null).commit();
+                       activity.getSupportFragmentManager().beginTransaction().replace(R.id.container, usersFragment).addToBackStack(null).commit();
                    }
 
                }

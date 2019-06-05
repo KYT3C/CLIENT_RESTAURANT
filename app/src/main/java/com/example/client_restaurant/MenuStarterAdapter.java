@@ -133,6 +133,7 @@ public class MenuStarterAdapter extends RecyclerView.Adapter<MenuStarterAdapter.
                          }
                      });
 
+
                      alert.show();
                  }
              });

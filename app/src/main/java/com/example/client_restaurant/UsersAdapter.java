@@ -9,30 +9,26 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
 import android.widget.TextView;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
-
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.net.Socket;
 import java.security.PublicKey;
 import java.util.List;
 
-public class TicketAdapter extends RecyclerView.Adapter<TicketAdapter.StarterViewHolder> {
+public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.StarterViewHolder> {
 
 
     private Context mContext;
-    private List<Ticket> mData;
-    private String ticketInfo;
+    private List<Users> mData;
 
 
-    public TicketAdapter(Context mContext, List<Ticket> mData) {
+    public UsersAdapter(Context mContext, List<Users> mData) {
         this.mContext = mContext;
         this.mData = mData;
-
     }
 
     @NonNull
@@ -41,7 +37,7 @@ public class TicketAdapter extends RecyclerView.Adapter<TicketAdapter.StarterVie
 
         View view;
         LayoutInflater mInflater = LayoutInflater.from(mContext);
-        view = mInflater.inflate(R.layout.cardview_tickets, viewGroup ,false);
+        view = mInflater.inflate(R.layout.cardview_users, viewGroup ,false);
 
         return new StarterViewHolder(view);
 
@@ -50,8 +46,8 @@ public class TicketAdapter extends RecyclerView.Adapter<TicketAdapter.StarterVie
     @SuppressLint("SetTextI18n")
     @Override
     public void onBindViewHolder(@NonNull StarterViewHolder starterViewHolder, int i) {
-        starterViewHolder.textViewIDValue.setText(""+Integer.toString(mData.get(i).getIdTicket()));
-        starterViewHolder.textViewPriceTicket.setText("Precio : " + Float.toString(mData.get(i).getTotalPrice()));
+        starterViewHolder.textViewIDValue.setText(mData.get(i).getFirstName());
+        starterViewHolder.textViewPriceTicket.setText(mData.get(i).getDni());
     }
 
     @Override
@@ -74,25 +70,26 @@ public class TicketAdapter extends RecyclerView.Adapter<TicketAdapter.StarterVie
 
                 @Override
                 public void onClick(View v) {
-                    SetIdAsyncTask setIdAsyncTask = new SetIdAsyncTask(mData.get(getAdapterPosition()).getIdTicket());
+                    SetIdAsyncTask setIdAsyncTask = new SetIdAsyncTask();
                     setIdAsyncTask.execute();
 
-                    final AlertDialog.Builder alertDialog = new AlertDialog.Builder(mContext);
+                    AlertDialog.Builder alertDialog = new AlertDialog.Builder(mContext);
                     LayoutInflater mInflater2 = LayoutInflater.from(mContext);
                     @SuppressLint("InflateParams") final View customLayout = mInflater2.inflate(R.layout.ticket_info_layout, null);
-
-                    alertDialog.setView(customLayout);
-                    final AlertDialog alert= alertDialog.create();
-
-
                     TextView ticketInfo = customLayout.findViewById(R.id.textViewAlertDialogTicketInfo);
-                    ticketInfo.setText(ticketInfo.getText());
-                    alert.show();
+
+                        System.out.println(mData.get(getAdapterPosition()).getDni());
+
+
+
+
+
+
+
+
                 }
             });
         }
-
-
         @SuppressLint("StaticFieldLeak")
         class SetIdAsyncTask extends AsyncTask<String, Void, String> {
 
@@ -101,9 +98,6 @@ public class TicketAdapter extends RecyclerView.Adapter<TicketAdapter.StarterVie
             DataInputStream dis;
             DataOutputStream dos;
             ObjectInputStream ois;
-            int idTicket;
-
-            private String devolverTicket;
 
 
 
@@ -111,11 +105,7 @@ public class TicketAdapter extends RecyclerView.Adapter<TicketAdapter.StarterVie
             protected void onPreExecute() {
                 super.onPreExecute();
             }
-
-            public SetIdAsyncTask(int idTicket) {
-
-                this.idTicket = idTicket;
-
+            public SetIdAsyncTask() {
 
 
             }
@@ -123,15 +113,14 @@ public class TicketAdapter extends RecyclerView.Adapter<TicketAdapter.StarterVie
             @Override
             protected void onPostExecute(String s) {
                 super.onPostExecute(s);
-
-
-
+                //dialog.dismiss();
             }
 
             @Override
             protected String doInBackground(String... strings) {
-
+/*
                 try {
+
                     Connection connection = new Connection();
                     String ip = connection.getIp();
                     sk = new Socket(ip, 20002);
@@ -142,8 +131,7 @@ public class TicketAdapter extends RecyclerView.Adapter<TicketAdapter.StarterVie
                     publicKey = (PublicKey) ois.readObject();
                     dos.writeInt(7);
                     dos.writeInt(idTicket);
-                    devolverTicket = dis.readUTF();
-
+                    //dis.readUTF();
 
                     sk.close();
                     dis.close();
@@ -153,7 +141,7 @@ public class TicketAdapter extends RecyclerView.Adapter<TicketAdapter.StarterVie
                 } catch (IOException | ClassNotFoundException ex) {
                     ex.printStackTrace();
                 }
-
+*/
                 return null;
 
 
@@ -161,4 +149,3 @@ public class TicketAdapter extends RecyclerView.Adapter<TicketAdapter.StarterVie
         }
     }
 }
-
