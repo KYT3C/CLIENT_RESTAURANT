@@ -59,6 +59,7 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.MenuViewHolder
         Fragment ticketFragment = new TicketFragment();
         Fragment profileFragment = new ProfileFragment();
         Fragment usersFragment = new UsersFragment();
+        Fragment dinnerTableFragment = new DinnerTableFragment();
 
         Bundle args = new Bundle();
 
@@ -88,6 +89,11 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.MenuViewHolder
                        AppCompatActivity activity = (AppCompatActivity) itemView.getContext();
 
                        activity.getSupportFragmentManager().beginTransaction().replace(R.id.container, menuFragment).addToBackStack(null).commit();
+                   }
+                   if(getAdapterPosition() == 3){
+                       AppCompatActivity activity = (AppCompatActivity) itemView.getContext();
+
+                       activity.getSupportFragmentManager().beginTransaction().replace(R.id.container, dinnerTableFragment).addToBackStack(null).commit();
                    }
 
                    if(getAdapterPosition() == 2){
