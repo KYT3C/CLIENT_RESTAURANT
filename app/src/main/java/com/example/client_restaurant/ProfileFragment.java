@@ -1,13 +1,22 @@
 package com.example.client_restaurant;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.net.Socket;
+import java.security.PublicKey;
 
 
 /**
@@ -24,7 +33,8 @@ public class ProfileFragment extends Fragment {
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
     private TextView nombre, tDni, telefono, kind;
-
+    private String sNombre, sTelefono, surname;
+    private int skind;
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
@@ -81,6 +91,9 @@ public class ProfileFragment extends Fragment {
         telefono = v.findViewById(R.id.txtNumTel);
         kind = v.findViewById(R.id.txtTipo);
 
+        GetTrabajadorActual gta = new GetTrabajadorActual();
+        gta.execute();
+
         return v;
     }
 
@@ -116,5 +129,75 @@ public class ProfileFragment extends Fragment {
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
+    }
+
+    @SuppressLint("StaticFieldLeak")
+    class GetTrabajadorActual extends AsyncTask<String, Void, String> {
+
+        Socket sk;
+        PublicKey publicKey;
+        DataInputStream dis;
+        DataOutputStream dos;
+        ObjectInputStream ois;
+
+
+        public GetTrabajadorActual() {
+
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            nombre.setText(sNombre+ ", "+ surname);
+            telefono.setText(sTelefono);
+            if (skind==1){
+                kind.setText("Cliente");
+            }else if (skind ==2){
+                kind.setText("Kitchen");
+            }else if (skind == 3){
+                kind.setText("Waiter");
+            }else if (skind == 4){
+                kind.setText("Admin");
+            }
+            super.onPostExecute(s);
+        }
+
+        @Override
+        protected String doInBackground(String... strings) {
+
+            try {
+                Connection connection = new Connection();
+                String ip = connection.getIp();
+                sk = new Socket(ip, 20002);
+                System.out.println("Establecida la conexión con " + ip);
+                dis = new DataInputStream(sk.getInputStream());
+                dos = new DataOutputStream(sk.getOutputStream());
+                ois = new ObjectInputStream(sk.getInputStream());
+
+                publicKey = (PublicKey) ois.readObject();
+                dos.writeInt(17);
+                dos.writeUTF(dni);
+
+                sNombre= dis.readUTF();
+                surname = dis.readUTF();
+                sTelefono = dis.readUTF();
+                skind = dis.readInt();
+                sk.close();
+                dis.close();
+                dos.close();
+                ois.close();
+
+            } catch (IOException | ClassNotFoundException ex) {
+                ex.printStackTrace();
+            }
+
+            return null;
+
+
+        }
     }
 }
