@@ -23,10 +23,10 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.StarterViewH
 
 
     private Context mContext;
-    private List<Ticket> mData;
+    private List<Users> mData;
 
 
-    public UsersAdapter(Context mContext, List<Ticket> mData) {
+    public UsersAdapter(Context mContext, List<Users> mData) {
         this.mContext = mContext;
         this.mData = mData;
     }
@@ -37,7 +37,7 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.StarterViewH
 
         View view;
         LayoutInflater mInflater = LayoutInflater.from(mContext);
-        view = mInflater.inflate(R.layout.cardview_tickets, viewGroup ,false);
+        view = mInflater.inflate(R.layout.cardview_users, viewGroup ,false);
 
         return new StarterViewHolder(view);
 
@@ -46,8 +46,8 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.StarterViewH
     @SuppressLint("SetTextI18n")
     @Override
     public void onBindViewHolder(@NonNull StarterViewHolder starterViewHolder, int i) {
-        starterViewHolder.textViewIDValue.setText(""+Integer.toString(mData.get(i).getIdTicket()));
-        starterViewHolder.textViewPriceTicket.setText("Precio : " + Float.toString(mData.get(i).getTotalPrice()));
+        starterViewHolder.textViewIDValue.setText(mData.get(i).getFirstName());
+        starterViewHolder.textViewPriceTicket.setText(mData.get(i).getDni());
     }
 
     @Override
@@ -70,7 +70,7 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.StarterViewH
 
                 @Override
                 public void onClick(View v) {
-                    SetIdAsyncTask setIdAsyncTask = new SetIdAsyncTask(mData.get(getAdapterPosition()).getIdTicket());
+                    SetIdAsyncTask setIdAsyncTask = new SetIdAsyncTask();
                     setIdAsyncTask.execute();
 
                     AlertDialog.Builder alertDialog = new AlertDialog.Builder(mContext);
@@ -78,7 +78,7 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.StarterViewH
                     @SuppressLint("InflateParams") final View customLayout = mInflater2.inflate(R.layout.ticket_info_layout, null);
                     TextView ticketInfo = customLayout.findViewById(R.id.textViewAlertDialogTicketInfo);
 
-                        System.out.println(mData.get(getAdapterPosition()).getIdTicket());
+                        System.out.println(mData.get(getAdapterPosition()).getDni());
 
 
 
@@ -98,7 +98,6 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.StarterViewH
             DataInputStream dis;
             DataOutputStream dos;
             ObjectInputStream ois;
-            int idTicket;
 
 
 
@@ -106,9 +105,8 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.StarterViewH
             protected void onPreExecute() {
                 super.onPreExecute();
             }
-            public SetIdAsyncTask(int idTicket) {
+            public SetIdAsyncTask() {
 
-                this.idTicket = idTicket;
 
             }
 
@@ -120,8 +118,9 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.StarterViewH
 
             @Override
             protected String doInBackground(String... strings) {
-
+/*
                 try {
+
                     Connection connection = new Connection();
                     String ip = connection.getIp();
                     sk = new Socket(ip, 20002);
@@ -142,7 +141,7 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.StarterViewH
                 } catch (IOException | ClassNotFoundException ex) {
                     ex.printStackTrace();
                 }
-
+*/
                 return null;
 
 
