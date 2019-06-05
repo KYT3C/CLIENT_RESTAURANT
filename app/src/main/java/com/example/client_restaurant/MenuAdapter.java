@@ -1,6 +1,7 @@
 package com.example.client_restaurant;
 
 import android.content.Context;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
@@ -17,13 +18,15 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.MenuViewHolder
     Context mContext;
     List<Item> mData;
     int selected_position = 0;
+    String data;
 
 
 
-    public MenuAdapter(Context mContext, List<Item> mData) {
+    public MenuAdapter(Context mContext, List<Item> mData, String data) {
 
         this.mContext = mContext;
         this.mData = mData;
+        this.data = data;
     }
 
 
@@ -54,6 +57,9 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.MenuViewHolder
         Fragment timerFragment = new TimerFragment();
         Fragment settingsFragment = new SettingsFragment();
         Fragment ticketFragment = new TicketFragment();
+        Fragment profileFragment = new ProfileFragment();
+
+        Bundle args = new Bundle();
 
         ImageView imgIcon;
 
@@ -72,6 +78,11 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.MenuViewHolder
                @Override
                public void onClick(View v) {
 
+                   if (getAdapterPosition() == 0) {
+                       AppCompatActivity activity = (AppCompatActivity) itemView.getContext();
+
+                       activity.getSupportFragmentManager().beginTransaction().replace(R.id.container, profileFragment).addToBackStack(null).commit();
+                   }
                    if (getAdapterPosition() == 1) {
                        AppCompatActivity activity = (AppCompatActivity) itemView.getContext();
 
@@ -83,6 +94,8 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.MenuViewHolder
 
                        activity.getSupportFragmentManager().beginTransaction().replace(R.id.container, ticketFragment).addToBackStack(null).commit();
                    }
+
+
                    if (getAdapterPosition() == 4) {
                        AppCompatActivity activity = (AppCompatActivity) itemView.getContext();
 

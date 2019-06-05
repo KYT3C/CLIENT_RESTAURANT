@@ -113,6 +113,7 @@ public class LoginActivity extends AppCompatActivity {
                 if (validatedLogin == 1) {
 
                     Intent intent = new Intent(LoginActivity.this, HomePageActivity.class);
+                    TempUser.Singleton().setDni(editTextDni.getText().toString());
                     startActivity(intent);
                 }
                 if (validatedLogin == 2) {
