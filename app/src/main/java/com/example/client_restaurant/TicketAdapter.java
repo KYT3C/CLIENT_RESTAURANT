@@ -81,14 +81,6 @@ public class TicketAdapter extends RecyclerView.Adapter<TicketAdapter.StarterVie
                     TextView ticketInfo = customLayout.findViewById(R.id.textViewAlertDialogTicketInfo);
 
                         System.out.println(mData.get(getAdapterPosition()).getIdTicket());
-
-
-
-
-
-
-
-
                 }
             });
         }
