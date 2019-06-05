@@ -22,5 +22,11 @@ Tincidunt eros mi nullam leo consequat viverra ac, phasellus pretium nibh ornare
 
     </ScrollView>
 
+    <Button
+        android:id="@+id/btnDelete"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Borrar" />
+
 
 </LinearLayout>

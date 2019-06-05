@@ -9,6 +9,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import java.io.DataInputStream;
@@ -80,7 +81,7 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.StarterViewH
 //                    alertDialog.setView(customLayout);
 
                     String dni = mData.get(getAdapterPosition()).getDni();
-                    SetIdAsyncTask setIdAsyncTask = new SetIdAsyncTask(dni);
+                    SetIdAsyncTask setIdAsyncTask = new SetIdAsyncTask(dni,1);
                     setIdAsyncTask.execute();
                 }
             });
@@ -94,37 +95,50 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.StarterViewH
             DataOutputStream dos;
             ObjectInputStream ois;
             String dni, nombre, apellidos, phoneNumber;
-            int kind;
+            int kind,option;
 
 
             @Override
             protected void onPreExecute() {
                 super.onPreExecute();
             }
-            public SetIdAsyncTask(String dni) {
+            public SetIdAsyncTask(String dni,int option) {
 
                 this.dni = dni;
+                this.option = option;
             }
 
             @Override
             protected void onPostExecute(String s) {
                 super.onPostExecute(s);
-                String total = "";
-                total = total + "Nombre : "+ nombre;
-                total = total + "\nApellidos :"+ apellidos;
-                total = total + "\nDNI : "+dni;
-                total = total + "\nNumero de Telefono : "+ phoneNumber;
-                total = total + "\ntipo de empleado :" +kind;
+                if(option == 1) {
+                    String total = "";
+                    total = total + "Nombre : " + nombre;
+                    total = total + "\nApellidos :" + apellidos;
+                    total = total + "\nDNI : " + dni;
+                    total = total + "\nNumero de Telefono : " + phoneNumber;
+                    total = total + "\ntipo de empleado :" + kind;
 
-                alertDialog = new AlertDialog.Builder(mContext);
-                LayoutInflater mInflater2 = LayoutInflater.from(mContext);
-                @SuppressLint("InflateParams") final View customLayout = mInflater2.inflate(R.layout.ticket_info_layout, null);
-                TextView ticketInfo = customLayout.findViewById(R.id.textViewAlertDialogTicketInfo);
-                ticketInfo.setText(total);
-                alertDialog.setView(customLayout);
-                final AlertDialog alert = alertDialog.create();
+                    alertDialog = new AlertDialog.Builder(mContext);
+                    LayoutInflater mInflater2 = LayoutInflater.from(mContext);
+                    @SuppressLint("InflateParams") final View customLayout = mInflater2.inflate(R.layout.ticket_info_layout, null);
+                    TextView ticketInfo = customLayout.findViewById(R.id.textViewAlertDialogTicketInfo);
+                    ticketInfo.setText(total);
+                    alertDialog.setView(customLayout);
+                    final AlertDialog alert = alertDialog.create();
+                    Button btn = customLayout.findViewById(R.id.btnDelete);
+                    btn.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            SetIdAsyncTask siat = new SetIdAsyncTask(dni, 2);
+                            siat.execute();
+                            alert.cancel();
+                        }
+                    });
 
-                alert.show();
+                    alert.show();
+
+                }
             }
 
             @Override
@@ -141,13 +155,18 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.StarterViewH
                     ois = new ObjectInputStream(sk.getInputStream());
                     publicKey = (PublicKey) ois.readObject();
 
-                    dos.writeInt(17);
-                    dos.writeUTF(dni);
-                    nombre = dis.readUTF();
-                    apellidos = dis.readUTF();
-                    phoneNumber = dis.readUTF();
-                    kind = dis.readInt();
+                    if(option == 1) {
+                        dos.writeInt(17);
+                        dos.writeUTF(dni);
+                        nombre = dis.readUTF();
+                        apellidos = dis.readUTF();
+                        phoneNumber = dis.readUTF();
+                        kind = dis.readInt();
+                    }else if (option == 2){
+                        dos.writeInt(13);
+                        dos.writeUTF(dni);
 
+                    }
 
 
                     sk.close();
