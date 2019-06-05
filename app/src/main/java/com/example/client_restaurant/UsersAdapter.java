@@ -59,8 +59,9 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.StarterViewH
 
         TextView textViewIDValue;
         TextView textViewPriceTicket;
+        AlertDialog.Builder alertDialog = null;
 
-        public StarterViewHolder(@NonNull View itemView) {
+        public StarterViewHolder(@NonNull final View itemView) {
             super(itemView);
 
             textViewIDValue = itemView.findViewById(R.id.ticket_id);
@@ -70,23 +71,17 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.StarterViewH
 
                 @Override
                 public void onClick(View v) {
-                    SetIdAsyncTask setIdAsyncTask = new SetIdAsyncTask();
+
+
+//                    alertDialog = new AlertDialog.Builder(mContext);
+//                    LayoutInflater mInflater2 = LayoutInflater.from(mContext);
+//                    @SuppressLint("InflateParams") final View customLayout = mInflater2.inflate(R.layout.ticket_info_layout, null);
+//                    TextView ticketInfo = customLayout.findViewById(R.id.textViewAlertDialogTicketInfo);
+//                    alertDialog.setView(customLayout);
+
+                    String dni = mData.get(getAdapterPosition()).getDni();
+                    SetIdAsyncTask setIdAsyncTask = new SetIdAsyncTask(dni);
                     setIdAsyncTask.execute();
-
-                    AlertDialog.Builder alertDialog = new AlertDialog.Builder(mContext);
-                    LayoutInflater mInflater2 = LayoutInflater.from(mContext);
-                    @SuppressLint("InflateParams") final View customLayout = mInflater2.inflate(R.layout.ticket_info_layout, null);
-                    TextView ticketInfo = customLayout.findViewById(R.id.textViewAlertDialogTicketInfo);
-
-                        System.out.println(mData.get(getAdapterPosition()).getDni());
-
-
-
-
-
-
-
-
                 }
             });
         }
@@ -98,27 +93,43 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.StarterViewH
             DataInputStream dis;
             DataOutputStream dos;
             ObjectInputStream ois;
-
+            String dni, nombre, apellidos, phoneNumber;
+            int kind;
 
 
             @Override
             protected void onPreExecute() {
                 super.onPreExecute();
             }
-            public SetIdAsyncTask() {
+            public SetIdAsyncTask(String dni) {
 
-
+                this.dni = dni;
             }
 
             @Override
             protected void onPostExecute(String s) {
                 super.onPostExecute(s);
-                //dialog.dismiss();
+                String total = "";
+                total = total + "Nombre : "+ nombre;
+                total = total + "\nApellidos :"+ apellidos;
+                total = total + "\nDNI : "+dni;
+                total = total + "\nNumero de Telefono : "+ phoneNumber;
+                total = total + "\ntipo de empleado :" +kind;
+
+                alertDialog = new AlertDialog.Builder(mContext);
+                LayoutInflater mInflater2 = LayoutInflater.from(mContext);
+                @SuppressLint("InflateParams") final View customLayout = mInflater2.inflate(R.layout.ticket_info_layout, null);
+                TextView ticketInfo = customLayout.findViewById(R.id.textViewAlertDialogTicketInfo);
+                ticketInfo.setText(total);
+                alertDialog.setView(customLayout);
+                final AlertDialog alert = alertDialog.create();
+
+                alert.show();
             }
 
             @Override
             protected String doInBackground(String... strings) {
-/*
+
                 try {
 
                     Connection connection = new Connection();
@@ -129,9 +140,15 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.StarterViewH
                     dos = new DataOutputStream(sk.getOutputStream());
                     ois = new ObjectInputStream(sk.getInputStream());
                     publicKey = (PublicKey) ois.readObject();
-                    dos.writeInt(7);
-                    dos.writeInt(idTicket);
-                    //dis.readUTF();
+
+                    dos.writeInt(17);
+                    dos.writeUTF(dni);
+                    nombre = dis.readUTF();
+                    apellidos = dis.readUTF();
+                    phoneNumber = dis.readUTF();
+                    kind = dis.readInt();
+
+
 
                     sk.close();
                     dis.close();
@@ -141,7 +158,7 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.StarterViewH
                 } catch (IOException | ClassNotFoundException ex) {
                     ex.printStackTrace();
                 }
-*/
+
                 return null;
 
 
